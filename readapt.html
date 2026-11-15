@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#78d9d0">
+<title>READAPT INNOVATION | Responsive & Adaptive Digital Tiered Reading</title>
+<style>
+:root{
+ --ink:#20334f;--muted:#65748b;--paper:#fffdf8;--sky:#bcecf4;--mint:#b9f0df;
+ --pink:#ffd0dc;--yellow:#ffe69a;--lav:#d9ceff;--blue:#8bc9ff;--coral:#ffad9b;
+ --shadow:0 12px 30px #314b6820;--line:#e8edf2;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--ink);
+ background:radial-gradient(circle at 10% 5%,#fff4c8 0,transparent 25%),
+ radial-gradient(circle at 90% 20%,#d6f7f2 0,transparent 28%),#f3f8ff;min-height:100vh}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0;color:var(--ink);font-weight:800;transition:.18s}
+button:hover{transform:translateY(-2px);filter:brightness(1.02)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #4169e1;outline-offset:3px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,4vw,44px)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:1000;letter-spacing:.5px}
+.logo{width:48px;height:48px;border-radius:17px;background:linear-gradient(135deg,#9be6df,#b8caff);display:grid;place-items:center;font-size:27px;box-shadow:var(--shadow)}
+.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:1.3px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border-radius:999px;padding:10px 15px;background:white;box-shadow:0 5px 14px #314b6815}
+main{max-width:1180px;margin:auto;padding:10px clamp(12px,3vw,30px) 50px}
+.hero{position:relative;overflow:hidden;border-radius:32px;padding:clamp(22px,5vw,52px);background:linear-gradient(115deg,#b8f0df,#c6eaff 58%,#e7d9ff);box-shadow:var(--shadow)}
+.hero:after{content:"☁️  ✦  ☁️";position:absolute;right:3%;bottom:7%;font-size:clamp(25px,5vw,52px);opacity:.65;letter-spacing:10px}
+.eyebrow{font-size:12px;font-weight:900;letter-spacing:2px;color:#477078}
+h1{font-size:clamp(30px,5vw,58px);line-height:1.02;margin:12px 0;max-width:700px}
+.hero p{max-width:650px;color:#425b70;line-height:1.6}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.cloud-btn{position:relative;border-radius:45% 55% 48% 52% / 55% 45% 55% 45%;padding:14px 23px;background:#fff;box-shadow:0 7px 0 #d9e6ef,0 10px 20px #314b6818;min-height:48px}
+.cloud-btn.primary{background:#ffcf83;box-shadow:0 7px 0 #e9b96c,0 10px 20px #314b6818}
+.cloud-btn.mint{background:#baf0df;box-shadow:0 7px 0 #8bd5bd}
+.cloud-btn.pink{background:#ffd0dc;box-shadow:0 7px 0 #e9aaba}
+.cloud-btn:active{transform:translateY(4px);box-shadow:0 3px 0 #d9e6ef}
+.section{margin-top:24px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:22px 2px 12px}
+.section-head h2{margin:0;font-size:clamp(21px,3vw,29px)}
+.section-head p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.panel,.story-card,.game-panel{background:#ffffffeb;border:1px solid #ffffff;border-radius:25px;padding:20px;box-shadow:var(--shadow)}
+.team-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.team{padding:16px 10px;border-radius:22px;background:#fff;text-align:center;border:2px solid transparent;box-shadow:0 6px 16px #314b6810}
+.team.selected{border-color:#506caa;background:#f2f6ff;transform:translateY(-3px)}
+.team .mascot{font-size:42px;display:block;margin-bottom:6px}
+.team strong{display:block;font-size:14px}.team small{color:var(--muted)}
+.story-card{padding:0;overflow:hidden;cursor:pointer}
+.story-art{min-height:150px;display:grid;place-items:center;font-size:65px;background:linear-gradient(135deg,#ffe9ad,#c5f1e7);position:relative}
+.story-card:nth-child(2) .story-art{background:linear-gradient(135deg,#d8d1ff,#c9eaff)}
+.story-info{padding:17px}.story-info h3{margin:0 0 7px}.story-info p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+.story-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.tag{background:#f1f5fb;border-radius:99px;padding:6px 10px;font-size:11px;font-weight:800}
+.hidden{display:none!important}
+.progress-wrap{height:10px;border-radius:99px;background:#e9eff6;overflow:hidden;margin:10px 0}
+.progress{height:100%;width:0;background:linear-gradient(90deg,#7bd8c1,#82b9ff);border-radius:99px;transition:width .3s}
+.game-top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.game-top h2{margin:0}
+.stat{background:#f3f7fb;border-radius:15px;padding:9px 12px;font-size:13px;font-weight:900}
+.game-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(240px,.8fr);gap:16px;margin-top:15px}
+.story-scene{background:linear-gradient(145deg,#e7f9f4,#edf3ff);border-radius:22px;padding:16px;margin-bottom:15px}
+.scene-title{font-weight:900;margin-bottom:5px}
+.scene-text{line-height:1.65;color:#3e5268}
+.characters{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.character{background:#fff;border-radius:18px;padding:8px 10px;min-width:90px;text-align:center;box-shadow:0 5px 14px #314b6812}
+.character button{background:transparent;padding:0;width:100%}
+.character .figure{display:block;font-size:54px;transform-origin:bottom;transition:.2s}
+.character button:hover .figure{animation:bounce .55s infinite alternate}
+.character small{display:block;font-weight:900}
+@keyframes bounce{to{transform:translateY(-9px) rotate(4deg)}}
+.question-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px}
+.tier-label{display:inline-block;background:#fff0c7;border-radius:99px;padding:7px 12px;font-size:11px;font-weight:1000;letter-spacing:.6px}
+.question{font-size:clamp(18px,2.5vw,23px);font-weight:900;line-height:1.4;margin:14px 0}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.answer{padding:13px;border-radius:16px;background:#f3f7fc;text-align:left;border:2px solid transparent;min-height:55px}
+.answer:hover{background:#eaf6ff}
+.answer.correct{border-color:#5fc69b;background:#e4fbef}
+.answer.wrong{border-color:#f28d91;background:#fff0f0}
+.feedback{margin-top:13px;padding:12px 14px;border-radius:15px;background:#f2f7ff;line-height:1.5;font-size:14px}
+.hint-box{background:#fff7d9;border:1px dashed #e8bd54;border-radius:15px;padding:12px;margin-top:12px;line-height:1.5;font-size:13px}
+.side-panel{display:flex;flex-direction:column;gap:13px}
+.assistant{background:linear-gradient(145deg,#f5eaff,#e8f8ff);border-radius:22px;padding:16px}
+.assistant-head{display:flex;align-items:center;gap:10px;font-weight:1000}
+.assistant-avatar{font-size:36px;background:white;border-radius:15px;padding:5px}
+.assistant p{font-size:13px;line-height:1.55;color:#52627a}
+.scoreboard{display:grid;gap:8px}
+.score-row{display:flex;justify-content:space-between;align-items:center;background:#f6f8fc;border-radius:13px;padding:9px 11px;font-size:13px}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tools button{padding:10px 12px;border-radius:14px;background:#fff;border:1px solid var(--line);font-size:12px}
+.footer-note{text-align:center;color:#77849a;font-size:12px;margin:22px 0}
+.modal-backdrop{position:fixed;inset:0;background:#18263c88;display:grid;place-items:center;padding:15px;z-index:10}
+.modal{background:#fff;border-radius:25px;padding:24px;max-width:520px;width:100%;box-shadow:0 20px 60px #14233d55}
+.modal h2{margin-top:0}
+.modal-character{font-size:100px;text-align:center;animation:bounce .8s infinite alternate}
+.modal p{line-height:1.6;color:#52627a}
+input[type=text],select{width:100%;padding:12px;border-radius:13px;border:1px solid #dce4ee;background:white;margin:6px 0 12px}
+.voice-row{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:800px){.game-layout{grid-template-columns:1fr}.team-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.answers{grid-template-columns:1fr}.topbar{align-items:flex-start}.brand{font-size:13px}.hero:after{opacity:.25}.panel{padding:15px}}
+
+/* ===== READAPT COLOR BURST VISUAL UPGRADE ===== */
+:root{
+ --ink:#26345f;--muted:#66739a;--paper:#fffdfb;
+ --shadow:0 14px 32px #4d4d8b20;--line:#e8e5ff;
+}
+body{
+ background:
+  radial-gradient(ellipse at 8% 12%,#ffe1ed 0,transparent 25%),
+  radial-gradient(ellipse at 92% 8%,#d8f8ff 0,transparent 24%),
+  radial-gradient(ellipse at 82% 78%,#eee0ff 0,transparent 28%),
+  radial-gradient(ellipse at 12% 88%,#fff0c9 0,transparent 25%),
+  #f8f7ff;
+ background-attachment:fixed;
+}
+.topbar{position:relative}
+.logo{
+ background:linear-gradient(135deg,#ff8bb5,#9b8cff 52%,#62d9d0);
+ color:white;box-shadow:0 7px 0 #8172c8,0 12px 22px #8172c844;
+}
+.brand{color:#34366e}
+.hero{
+ background:linear-gradient(120deg,#ffb5d0 0%,#ffd98e 32%,#a8eee0 66%,#b9c7ff 100%);
+ border:3px solid #fff;box-shadow:0 18px 38px #6d68ad25;
+}
+.hero:before{
+ content:"✦  ☁  ✧  ★";position:absolute;right:5%;top:12%;
+ font-size:clamp(22px,4vw,42px);letter-spacing:12px;color:#fff;
+ text-shadow:0 3px 0 #d79cc8;opacity:.9;pointer-events:none;
+ animation:floatSpark 4s ease-in-out infinite;
+}
+.hero:after{color:#fff;text-shadow:0 3px 0 #8db9dc}
+@keyframes floatSpark{50%{transform:translateY(-10px) rotate(4deg)}}
+.eyebrow{color:#6552a8}
+h1{color:#34336f;text-shadow:2px 3px 0 #ffffff90}
+.hero p{color:#4d5278}
+.cloud-btn{
+ background:linear-gradient(135deg,#fff,#e8f8ff);
+ border:2px solid #fff;box-shadow:0 6px 0 #b8d8ed,0 11px 18px #5365a322;
+}
+.cloud-btn.primary{
+ background:linear-gradient(135deg,#ffdc78,#ff9fc0);
+ box-shadow:0 6px 0 #df8e9f,0 11px 18px #b76c9225;
+}
+.cloud-btn.mint{background:linear-gradient(135deg,#b8f5dc,#7ee2d4);box-shadow:0 6px 0 #63bfae}
+.cloud-btn.pink{background:linear-gradient(135deg,#ffd0e3,#f7a9d0);box-shadow:0 6px 0 #d88bb5}
+.pill{background:linear-gradient(135deg,#fff,#f0eaff);border:1px solid #fff;color:#574b9c}
+.section-head h2{color:#3e397d}
+.section-head .tag{background:linear-gradient(90deg,#ffe7a6,#ffd0e2);color:#8b4d78}
+.panel,.story-card,.game-panel{
+ border:2px solid #fff;background:#ffffffed;
+ box-shadow:0 12px 28px #635c9a1c;
+}
+.team{
+ border:2px solid #fff;
+ background:linear-gradient(145deg,#fff,#f4f0ff);
+ box-shadow:0 8px 18px #68609a18;
+ transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.team:nth-child(1){background:linear-gradient(145deg,#fff0d7,#ffe1eb)}
+.team:nth-child(2){background:linear-gradient(145deg,#e8e1ff,#dff4ff)}
+.team:nth-child(3){background:linear-gradient(145deg,#d9f8f1,#dff0ff)}
+.team:nth-child(4){background:linear-gradient(145deg,#fff0d9,#e7f8d9)}
+.team.selected{border-color:#7869d9;background:linear-gradient(145deg,#fff2a8,#f6d4ff);box-shadow:0 10px 24px #8c72c744}
+.team .mascot{filter:drop-shadow(0 4px 2px #51447a22);animation:mascotBob 2.8s ease-in-out infinite}
+@keyframes mascotBob{50%{transform:translateY(-5px) rotate(3deg)}}
+.story-card{transition:transform .22s,box-shadow .22s}
+.story-card:hover{transform:translateY(-6px) rotate(-.4deg);box-shadow:0 18px 34px #7064b533}
+.story-art{background:linear-gradient(135deg,#ffdc92,#ffb9d3 48%,#c6c2ff)!important}
+.story-card:nth-child(2) .story-art{background:linear-gradient(135deg,#b9f4e7,#a9d8ff 50%,#d9c4ff)!important}
+.story-art:after{content:"✦  ✧  ✦";position:absolute;right:15px;top:12px;color:#fff;font-size:22px;text-shadow:0 2px 4px #8a6eaa}
+.story-info h3{color:#51418d}
+.tag{background:linear-gradient(90deg,#fff0b9,#ffe0ed);color:#77528d}
+.progress-wrap{background:#eeeaff;border:2px solid white;height:14px}
+.progress{background:linear-gradient(90deg,#ff9fc4,#ffc86e,#71ddc7,#8c9cff)}
+.game-panel{background:linear-gradient(145deg,#fff,#fbf9ff)}
+.stat{background:linear-gradient(135deg,#fff0c7,#ffe0ed);color:#76518a;border:1px solid #fff}
+.story-scene{background:linear-gradient(135deg,#d8f8ee,#dcecff 55%,#f4ddff);border:2px solid white}
+.scene-title{color:#4b438a}
+.question-card{border:2px solid #f0eaff;background:linear-gradient(145deg,#fff,#fffaff)}
+.tier-label{background:linear-gradient(90deg,#ffe69a,#ffbdd6);color:#7b4b82}
+.answer{background:linear-gradient(135deg,#f4f0ff,#effaff);border:2px solid #fff;box-shadow:0 4px 10px #6055a010}
+.answer:nth-child(4n+1){background:linear-gradient(135deg,#ffe8ef,#fff5e3)}
+.answer:nth-child(4n+2){background:linear-gradient(135deg,#e5f8f1,#edfbff)}
+.answer:nth-child(4n+3){background:linear-gradient(135deg,#eee7ff,#f9efff)}
+.answer:nth-child(4n){background:linear-gradient(135deg,#fff4d8,#fff0e8)}
+.answer:hover{border-color:#a99af0;transform:translateY(-2px)}
+.answer.correct{border-color:#50c99c;background:linear-gradient(135deg,#d9ffed,#e5fff7)}
+.answer.wrong{border-color:#f18aa6;background:linear-gradient(135deg,#ffe0e8,#fff0ed)}
+.feedback{background:linear-gradient(110deg,#e5f7ff,#f0eaff);border:1px solid #d9d2ff;color:#46517c}
+.hint-box{background:linear-gradient(110deg,#fff4c9,#ffe4ed);border:2px dashed #edb65d;color:#76552c}
+.assistant{background:linear-gradient(135deg,#e9ddff,#d8f4ff 55%,#d9f9e9);border:2px solid white}
+.assistant-avatar{background:linear-gradient(135deg,#fff,#ffe3f0);box-shadow:0 5px 12px #6257a522}
+.score-row{background:linear-gradient(100deg,#fff0d5,#f4eaff);border:1px solid #fff}
+.tools button{background:linear-gradient(135deg,#fff,#f1eaff);border:1px solid #ded5ff;color:#55478e}
+.character{background:linear-gradient(145deg,#fff,#f4efff);border:2px solid white;box-shadow:0 7px 15px #645b9b18}
+.character:nth-child(3n+1){background:linear-gradient(145deg,#fff0d9,#ffe3ed)}
+.character:nth-child(3n+2){background:linear-gradient(145deg,#e4f8f2,#e7f1ff)}
+.character:nth-child(3n){background:linear-gradient(145deg,#f0e7ff,#fff0f7)}
+.modal{border:4px solid #fff;background:linear-gradient(145deg,#fff,#f3edff);box-shadow:0 24px 70px #27204d66}
+.modal h2{color:#51418d}
+.footer-note{color:#7770a5}
+button{border-radius:18px}
+button:active{filter:saturate(1.15)}
+@media(max-width:560px){
+ .hero{border-radius:24px}
+ .hero:before{right:4%;top:5%;opacity:.6}
+ .team{padding:13px 7px}
+}
+
+
+/* Staged team-first navigation */
+.selection-page{animation:pageIn .45s ease both}.step-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:20px;padding:16px 18px;border:2px solid #fff;border-radius:22px;background:linear-gradient(110deg,#fff0d8,#f2e8ff,#e4fbf4);box-shadow:0 10px 24px #6d68ad18}.selected-team-note{font-weight:900;color:#51418d}.story-card{cursor:pointer}.story-card:focus{outline:4px solid #8f83ed;outline-offset:3px}@keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== POKI-STYLE SHELL ===== */
+body{background:#f7e66d;padding-top:96px}
+.topbar{display:none}
+.pnav{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:4px;background:#fff;border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 10px 26px #0d2b4e33;max-width:calc(100vw - 16px)}
+.plogo{font-weight:1000;font-size:21px;letter-spacing:-.5px;color:#0d2b4e;cursor:pointer;display:flex;align-items:center;gap:3px;white-space:nowrap}.plogo i{width:13px;height:13px;border-radius:50%;background:#4a9eff;box-shadow:inset 0 -6px 0 #0d2b4e}
+.pdiv{width:3px;height:44px;background:#eaf0fa;margin:0 8px}
+.pb{width:clamp(38px,10.5vw,54px);height:clamp(38px,10.5vw,54px);border-radius:17px;background:transparent;display:grid;place-items:center;color:#0d2b4e;padding:0}
+.pb svg{width:60%;height:60%;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pb.on{background:#4a9eff;color:#fff}.pb:hover{background:#e8f2ff}.pb.on:hover{background:#4a9eff}
+@media(max-width:520px){.plogo span{display:none}.pdiv{margin:0 3px}.pnav{padding-left:10px}}
+.panel,.question-card,.story-scene,.game-panel,.section,.modal{border-radius:26px}
+#doodles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}#doodles svg{position:absolute;animation:dFloat 7s ease-in-out infinite}
+@keyframes dFloat{50%{transform:translateY(-14px) rotate(4deg)}}
+main,.footer-note{position:relative;z-index:1}
+/* ===== FEELINGS FRIENDS ===== */
+.bd{width:110px;height:110px;display:inline-block}.bd svg{width:100%;height:100%;display:block;overflow:visible}
+.bd.joy,.bd.proud{animation:bJoy .55s ease-in-out infinite alternate}@keyframes bJoy{from{transform:translateY(0) rotate(-6deg)}to{transform:translateY(-16px) rotate(6deg) scale(1.08)}}
+.bd.sad{animation:bSad 2s ease-in-out infinite}@keyframes bSad{50%{transform:translateY(6px) scale(.97,.94)}}
+.bd.anxious{animation:bAnx .12s linear infinite alternate}@keyframes bAnx{from{transform:translateX(-2px) rotate(-1.5deg)}to{transform:translateX(2px) rotate(1.5deg)}}
+.bd.angry{animation:bAng .6s ease-in-out infinite alternate}@keyframes bAng{to{transform:scale(1.07)}}
+.bd.calm{animation:bCalm 3s ease-in-out infinite}@keyframes bCalm{50%{transform:translateY(-8px)}}
+.bd .tr,.bd .sw{animation:tear 1.2s infinite}@keyframes tear{from{transform:translateY(0);opacity:1}to{transform:translateY(18px);opacity:0}}
+#react{position:fixed;left:50%;bottom:16px;transform:translate(-50%,170%);z-index:60;display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .45s cubic-bezier(.3,1.5,.5,1);pointer-events:none;width:max-content;max-width:94vw}
+#react.show{transform:translate(-50%,0)}.rb{display:flex;gap:4px}
+.rbub{background:#fff;border:3px solid #0d2b4e;border-radius:20px;padding:8px 16px;font-weight:900;color:#0d2b4e;box-shadow:0 6px 0 #0003;text-align:center}
+.pt{position:fixed;top:-40px;font-size:28px;pointer-events:none;z-index:61;animation:pfall 2.4s ease-in forwards}
+@keyframes pfall{to{transform:translate(var(--dx),108vh) rotate(360deg)}}
+.assistant-avatar{background:none!important;box-shadow:none!important;overflow:visible!important}.assistant-avatar .bd{width:48px;height:48px}
+.feel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:16px}
+.feel{background:#fff;border-radius:24px;padding:16px;text-align:center;box-shadow:var(--shadow);cursor:pointer;border:3px solid transparent}.feel:hover{border-color:#4a9eff}.feel .bd{width:96px;height:96px;animation:none}.feel:hover .bd,.feel.on .bd{animation:inherit}
+.feel b{display:block;font-size:17px}.feel small{color:var(--muted)}
+.figure,.mascot{display:inline-block;animation:fBob 2.2s ease-in-out infinite}.character:nth-child(2n) .figure{animation-delay:-1s}.character button:hover .figure{animation:bJoy .4s infinite alternate}
+@keyframes fBob{50%{transform:translateY(-6px) rotate(4deg)}}
+/* ===== ACCOUNT (Poki-style) ===== */
+#me{background:#86ffe3;border-radius:34px;padding:34px 14px 40px;text-align:center}
+.acard{background:#fff;border-radius:26px;max-width:460px;margin:18px auto 0;box-shadow:0 10px 30px #0d2b4e22;overflow:hidden;text-align:center}
+.atabs{display:flex}.atabs button{flex:1;padding:20px;background:#eef3fb;color:#1a8cff;font-size:20px;border-radius:0}.atabs button.on{background:#fff}
+.abody{padding:22px 24px}.abody h3{font-size:26px;color:#0d2b4e;margin:6px 0 16px}
+.obtn{display:block;width:100%;border:3px solid #1a8cff;background:#fff;color:#1a8cff;border-radius:40px;padding:14px;font-size:20px;margin:12px 0;font-weight:900}.obtn:disabled{opacity:.55;cursor:not-allowed}.obtn.fill{background:#1a8cff;color:#fff}
+.abody input{width:100%;padding:14px;border-radius:16px;border:3px solid #cfe3ff;font-size:18px}
+.avs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0}.avs .bd{width:58px;height:58px;animation:none;cursor:pointer;border-radius:50%;border:4px solid transparent}.avs .bd.sel{border-color:#1a8cff}
+.legal{padding:16px 22px;border-top:2px solid #eef3fb;color:#65748b;font-size:14px;line-height:1.5}
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px}.about-grid>div{background:#fff;border-radius:24px;padding:18px;box-shadow:var(--shadow)}.about-grid h3{margin:0 0 6px}
+.clip{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 0;padding:10px;background:#f1f7ff;border-radius:16px}.clip b{flex:1 1 100%}.clip button{padding:8px 12px;border-radius:12px;background:#fff;box-shadow:0 3px 0 #d9e6ef}
+#musicBtn{position:fixed;left:12px;bottom:12px;z-index:55;width:50px;height:50px;border-radius:50%;background:#fff;box-shadow:0 6px 16px #0d2b4e33;font-size:22px}
+/* ===== MONSTER HOSTS ===== */
+body{background:linear-gradient(125deg,#ff9fd8,#ffd36b,#8ff0c6,#7cc7ff,#c9a0ff,#ff9fd8);background-size:500% 500%;animation:bgMove 24s ease infinite}
+@keyframes bgMove{50%{background-position:100% 50%}}
+.cf{position:absolute;bottom:-50px;opacity:.55;animation:cfUp linear infinite}@keyframes cfUp{to{transform:translateY(-118vh) rotate(540deg)}}
+.hero:after{display:none}.hero{padding-bottom:clamp(22px,5vw,52px)}
+.wm{position:absolute;right:3%;bottom:6px;display:flex;flex-direction:column;align-items:center;gap:4px;max-width:44%}.wm .mon{width:150px;height:172px}
+#wbub{font-size:14px;max-width:230px}
+@media(max-width:700px){.wm{position:static;max-width:none;margin-top:14px}.hero h1{max-width:none}.wm .mon{width:130px;height:150px}}
+.mon{display:inline-block;width:120px;height:138px;cursor:pointer;position:relative;vertical-align:bottom}.mon svg{width:100%;height:100%;display:block;overflow:visible}
+.mon *{transform-box:view-box}.mon.mini{width:30px;height:34px;pointer-events:none}.mon.mini2{width:84px;height:96px}
+.team .mon{width:104px;height:120px;margin:auto}.team .mascot{animation:none!important;display:block}
+.assistant-head{align-items:center;gap:8px}.assistant-avatar .mon{width:84px;height:96px}
+.mon .bodyg{transform-origin:70px 148px;animation:mBreath 3s ease-in-out infinite}@keyframes mBreath{50%{transform:scale(1.025,1.04)}}
+.mon .eye{transform-box:fill-box;transform-origin:center;animation:mBlink 4.2s infinite}@keyframes mBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+.mon .pup{transform:translate(calc(var(--px,0)*2.4px),calc(var(--py,0)*2px))}
+.mon .armL{transform-origin:30px 94px}.mon .armR{transform-origin:110px 94px}
+.mon .mf,.mon .mo,.mon .tr,.mon .br{display:none}.mon .br{fill:none;stroke:#1c1430;stroke-width:3.5;stroke-linecap:round}
+.mon .stalk{animation:mStalk 2.2s ease-in-out infinite alternate}@keyframes mStalk{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.mon.a-wave .armR{transform:rotate(-145deg);animation:mWave .5s ease-in-out infinite alternate}@keyframes mWave{from{transform:rotate(-128deg)}to{transform:rotate(-162deg)}}
+.mon.a-up .armL{transform:rotate(150deg);animation:mUpL .7s ease-in-out infinite alternate}.mon.a-up .armR{transform:rotate(-150deg);animation:mUpR .7s ease-in-out infinite alternate}
+@keyframes mUpL{to{transform:rotate(172deg)}}@keyframes mUpR{to{transform:rotate(-172deg)}}
+.mon.talk .mc{display:none}.mon.talk .mo{display:block;transform-origin:70px 100px;animation:mMouth .18s infinite alternate}@keyframes mMouth{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+.mon.talk .bodyg{animation:mTalk .32s ease-in-out infinite alternate}@keyframes mTalk{from{transform:rotate(-2deg) scale(1.02,.97)}to{transform:rotate(2deg) translateY(-5px) scale(.98,1.03)}}
+.mon.talk .armR{animation:mGest 1s ease-in-out infinite}@keyframes mGest{0%,100%{transform:rotate(-30deg)}50%{transform:rotate(-75deg)}}
+.mon.cheer .bodyg{animation:mCheer .45s ease-in-out infinite alternate}@keyframes mCheer{to{transform:translateY(-16px) scale(.96,1.06)}}
+.mon.cheer .armL{animation:mUpL .3s infinite alternate;transform:rotate(150deg)}.mon.cheer .armR{animation:mUpR .3s infinite alternate;transform:rotate(-150deg)}.mon.cheer .mc{display:none}.mon.cheer .mo{display:block}
+.mon.sad .bodyg{animation:mSad 2s ease-in-out infinite}@keyframes mSad{50%{transform:translateY(4px) scale(1.02,.93)}}.mon.sad .mc{display:none}.mon.sad .mf,.mon.sad .br{display:block}.mon.sad .tr{display:block;animation:tear 1.2s infinite}
+.mon.sad .brL{transform:rotate(-16deg);transform-origin:55px 56px;transform-box:view-box}.mon.sad .brR{transform:rotate(16deg);transform-origin:85px 56px}
+.mon.calm .eye{animation:none;transform:scaleY(.45)}.mon.hop .bodyg{animation:mHop .6s}@keyframes mHop{30%{transform:translateY(-22px) scale(.95,1.08)}60%{transform:scale(1.08,.9)}}
+</style>
+</head>
+<body>
+<header class="topbar">
+ <div class="brand"><div class="logo">📚</div><div>READAPT INNOVATION<small>RESPONSIVE & ADAPTIVE DIGITAL TIERED READING</small></div></div>
+ <div class="top-actions"><button class="pill" onclick="openVoice()">🎙 Voice Studio</button><button class="pill" onclick="showGuide()">❔ How to play</button></div>
+</header>
+<main>
+<section id="home">
+ <div class="hero" id="welcomeHero">
+  <div class="eyebrow">GRADE 4 • READ • THINK • DISCOVER</div>
+  <h1>Welcome, Reading Adventurers!</h1>
+  <p>Choose your team first. Your story worlds will appear only after your team is selected. Work together, listen carefully, and enjoy the reading quest!</p>
+  <div class="hero-actions"><button class="cloud-btn primary" onclick="document.getElementById('teamPage').scrollIntoView({behavior:'smooth'})">☁ Begin adventure</button><button class="cloud-btn" onclick="showGuide()">✦ How to play</button></div>
+ </div>
+ <section class="section selection-page" id="teamPage">
+  <div class="section-head"><div><h2>🚩 Step 1: Choose your team</h2><p>Choose one team to represent your group. The whole class can discuss before answering.</p></div><span class="tag">STEP 1 OF 3</span></div>
+  <div class="team-grid" id="teamGrid"></div>
+  <div class="step-actions"><div class="selected-team-note" id="selectedTeamNote">Selected team: 🦊 Fox Explorers</div><button class="cloud-btn primary" onclick="goToStories()">☁ Next: Choose a story</button></div>
+ </section>
+ <section class="section selection-page hidden" id="storyPage">
+  <div class="section-head"><div><h2>📚 Step 2: Choose your story</h2><p id="storyPageIntro">Your team is ready! Choose one of these three story adventures.</p></div><span class="tag">STEP 2 OF 3</span></div>
+  <div class="grid" id="storyGrid"></div>
+  <div class="step-actions"><button class="cloud-btn" onclick="backToTeams()">☁ Back to teams</button><span class="selected-team-note" id="storyTeamNote"></span></div>
+ </section>
+</section>
+
+<section id="game" class="hidden">
+ <div class="game-panel">
+  <div class="game-top"><div><div class="eyebrow">READAPT READING QUEST</div><h2 id="gameTitle">Story title</h2></div>
+   <div class="tools"><span class="stat" id="teamStat">🦊 Fox Explorers</span><span class="stat" id="scoreStat">⭐ 0 points</span><button onclick="goHome()">⌂ Home</button></div>
+  </div>
+  <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+  <div class="game-top"><span class="stat" id="tierStat">Tier 1 • Literal Comprehension</span><span class="stat" id="questionStat">Question 1 of 10</span></div>
+  <div class="game-layout">
+   <div>
+    <div class="story-scene">
+     <div class="scene-title">📖 Story Corner — read together</div>
+     <div class="scene-text" id="storyText"></div>
+     <div class="characters" id="characters"></div>
+     <small style="color:#66758b;display:block;margin-top:9px">Tap a character to see the full character card and hear them speak.</small>
+    </div>
+    <div class="question-card">
+     <span class="tier-label" id="tierPill">TIER 1 • EASY START</span>
+     <div class="question" id="questionText"></div>
+     <div class="answers" id="answers"></div>
+     <div class="feedback hidden" id="feedback" aria-live="polite"></div>
+     <div class="hint-box hidden" id="hintBox"></div>
+     <div class="tools" style="margin-top:15px">
+      <button onclick="showHint()">💡 Cloud Hint</button>
+      <button onclick="readQuestion()">🔊 Read question</button>
+      <button onclick="nextQuestion()" id="nextBtn" class="cloud-btn mint" disabled>☁ Next question</button>
+     </div>
+    </div>
+   </div>
+   <aside class="side-panel">
+    <div class="assistant">
+     <div class="assistant-head"><span class="assistant-avatar">🧠</span> READAPT Guide</div>
+     <p id="guideText">I will guide your team. Read carefully, discuss your ideas, and choose the best answer. You can ask for a hint at any time.</p>
+     <button class="cloud-btn" onclick="speakGuide()">🔈 Hear instructions</button>
+    </div>
+    <div class="panel">
+     <strong>🏅 Class team scoreboard</strong><div class="scoreboard" id="scoreboard"></div>
+    </div>
+    <div class="panel">
+     <strong>🎤 Your voice tools</strong><p style="font-size:12px;color:#65748b">Record a teacher's instruction or your own story reading. Recording stays in this browser session.</p>
+     <div class="voice-row"><button class="cloud-btn pink" onclick="startRecording()">● Record</button><button class="cloud-btn" onclick="stopRecording()">■ Stop</button></div>
+     <audio id="audioPlayback" controls class="hidden" style="width:100%;margin-top:10px"></audio>
+     <p id="recordStatus" style="font-size:11px;color:#65748b">No recording yet.</p>
+    </div>
+    <button class="cloud-btn" onclick="showResults()">🏆 View class results</button>
+   </aside>
+  </div>
+ </div>
+</section>
+<div class="footer-note">READAPT • Responsive, supportive, and story-powered reading practice</div>
+</main>
+
+<div class="modal-backdrop hidden" id="modalBackdrop" onclick="if(event.target===this)closeModal()">
+ <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const teams=[
+ {name:"Fox Explorers",emoji:"🦊",motto:"Curious minds"},
+ {name:"Owl Scholars",emoji:"🦉",motto:"Wise readers"},
+ {name:"Dolphin Detectives",emoji:"🐬",motto:"Clue finders"},
+ {name:"Panda Pioneers",emoji:"🐼",motto:"Brave thinkers"}
+];
+const stories=[
+ {id:"seed",title:"The Moonlit Seed",emoji:"🌱",subtitle:"A forest friendship story",description:"Mira the rabbit and Pip the firefly help a tiny seed find a safe place to grow.",text:"One evening, Mira the rabbit found a tiny seed beside the forest path. She wanted to plant it, but the ground was dry. Pip the firefly glowed nearby and offered to guide her to the river. On the way, they met Toma the turtle, who showed them soft soil under a large tree. Mira planted the seed and Pip sprinkled a little river water over it. Every day, the friends visited the spot. After many sunny mornings, a green shoot appeared. The friends learned that small acts of care can help something wonderful grow.",characters:[["Mira the Rabbit","🐰","I found a tiny seed. I hope we can help it grow!"],["Pip the Firefly","🪲","Follow my gentle light. I know the way to the river."],["Toma the Turtle","🐢","The soil beneath this tree is soft and ready for planting."]]},
+ {id:"bell",title:"The Mystery of the Missing Bell",emoji:"🔔",subtitle:"A school-day mystery",description:"Three classmates use careful reading, clues, and teamwork to find their classroom bell.",text:"On Monday morning, the class bell was missing from the reading corner. Ana, Ben, and Lito decided to look for clues. Ana noticed a trail of tiny paper stars near the bookshelf. Ben remembered that their class had made paper decorations on Friday. Lito checked behind the big storybook basket and found a note. It said, “Keep the bell safe until the school program.” Their teacher had placed the bell inside a decorated box so it would not get lost during cleaning. The children returned the box to the teacher and learned that clues are easier to understand when people share what they know.",characters:[["Ana","👧🏻","I noticed tiny paper stars near the bookshelf."],["Ben","👦🏻","I remember making decorations on Friday."],["Lito","🧒🏻","There is a note behind the storybook basket!"],["Teacher","👩🏻‍🏫","Good readers notice details and connect clues."]]},
+ {id:"river",title:"The River Clean-Up Team",emoji:"🏞️",subtitle:"A community adventure",description:"Kai, Lila, and a friendly bird work together to care for the river near their village.",text:"On Saturday morning, Kai and Lila walked to the river with their grandmother. They saw leaves and empty snack wrappers near the riverbank. Their grandmother explained that litter can make the river dirty and harm animals. Kai picked up the dry wrappers using a pair of gloves, while Lila placed fallen leaves in a compost basket. A bright kingfisher named Kiko watched from a branch. It flew toward a clear part of the river where small fish were swimming. The children asked their neighbors to help keep the river clean. By afternoon, the riverbank looked better. Kai and Lila learned that small actions become powerful when a community works together.",characters:[["Kai","👦🏻","I will help pick up the litter safely."],["Lila","👧🏻","Fallen leaves can go into the compost basket."],["Grandmother","👵🏻","A clean river helps people, plants, and animals."],["Kiko the Kingfisher","🐦","Look! Fish need clean water to live."]]}
+];
+const Q=(q,opts,a,h,why)=>({q,opts,a,h,why});
+const bank={
+ seed:[
+ [
+ Q("What did Mira find beside the forest path?",["A tiny seed","A golden key","A red flower","A small bell"],0,"Look at the first sentence of the story.","Mira found a tiny seed beside the path."),
+ Q("Who offered to guide Mira to the river?",["Toma","Pip","A bird","The teacher"],1,"Which character glowed nearby?","Pip the firefly offered to guide Mira."),
+ Q("What was the ground like at first?",["Wet","Snowy","Dry","Covered in leaves"],2,"Find the sentence before Pip offered help.","The ground was dry."),
+ Q("Which animal showed them soft soil?",["A rabbit","A turtle","A fox","A deer"],1,"Look for the character they met on the way.","Toma the turtle showed them the soil."),
+ Q("Where was the soft soil?",["Under a large tree","Inside a cave","Beside a house","On a hill"],0,"The answer is in Toma's suggestion.","It was under a large tree."),
+ Q("What did Mira do with the seed?",["She carried it home","She planted it","She gave it away","She dropped it"],1,"What happened after they found the soft soil?","Mira planted the seed."),
+ Q("What did Pip sprinkle over the seed?",["Sand","Leaves","River water","Pebbles"],2,"Pip helped with something from the river.","Pip sprinkled river water."),
+ Q("When did the friends visit the spot?",["Every day","Once a year","Only at night","On Monday"],0,"Find the sentence after the seed was planted.","They visited every day."),
+ Q("What appeared after many sunny mornings?",["A green shoot","A large fruit","A flower pot","A new path"],0,"What grew from the seed?","A green shoot appeared."),
+ Q("How many main friends helped the seed?",["One","Two","Three","Five"],2,"Count Mira, Pip, and Toma.","Three friends helped.")
+ ],
+ [
+ Q("What does the word 'glowed' mean in the story?",["Shone with light","Made a loud sound","Moved quickly","Fell down"],0,"Think about what a firefly does.","Glowed means shone with light."),
+ Q("Which word is closest in meaning to 'tiny'?",["Huge","Small","Heavy","Bright"],1,"Tiny describes the size of the seed.","Tiny means small."),
+ Q("What does 'sprinkled' mean?",["Poured all at once","Scattered drops lightly","Broke into pieces","Covered with soil"],1,"Imagine adding a little water gently.","Sprinkled means scattered drops lightly."),
+ Q("Which word describes Toma's action when he showed the soil?",["Helpful","Careless","Angry","Sleepy"],0,"He shared useful information.","Helpful means giving support."),
+ Q("What is the opposite of 'dry'?",["Dusty","Hard","Wet","Empty"],2,"Think of soil after rain.","The opposite of dry is wet."),
+ Q("What does 'appeared' mean?",["Became visible","Disappeared","Was hidden","Was forgotten"],0,"The shoot could now be seen.","Appeared means became visible."),
+ Q("Which word best describes the friends?",["Selfish","Cooperative","Unkind","Lazy"],1,"They worked together to help the seed.","Cooperative means working together."),
+ Q("What does 'soft soil' tell us about the ground?",["It is easy to dig","It is made of metal","It is frozen","It is full of stones"],0,"Soft soil is easier to plant in.","Soft soil is easier to dig and plant."),
+ Q("Which word is a synonym for 'wonderful'?",["Terrible","Amazing","Ordinary","Difficult"],1,"The ending describes something good and special.","Amazing is close in meaning to wonderful."),
+ Q("In the story, 'spot' means —",["A place","A sound","A person","A tool"],0,"The friends visited the same location.","Spot means a place.")
+ ],
+ [
+ Q("Why did Mira want to plant the seed?",["She wanted to help it grow","She wanted to hide it","She wanted to sell it","She wanted to throw it away"],0,"Think about Mira's actions throughout the story.","Mira cared for the seed and wanted it to grow."),
+ Q("Why was Pip's light useful?",["It helped guide Mira","It warmed the river","It changed the soil","It made the seed larger"],0,"What did Pip offer to do?","Pip guided Mira along the way."),
+ Q("What might have happened if the friends had not found soft soil?",["The seed might not have had a good place to grow","The river would disappear","Pip would lose his light","The tree would walk away"],0,"Think about what a seed needs.","The seed needed a suitable place for planting."),
+ Q("Which event happened first?",["A green shoot appeared","Mira found a seed","The friends visited daily","Pip watered the seed"],1,"Look at the beginning of the story.","Mira found the seed first."),
+ Q("Which event happened last?",["They met Toma","They found the river","A green shoot appeared","Mira found the seed"],2,"Look at the final part.","The green shoot appeared last."),
+ Q("What is the main lesson of the story?",["Teamwork and care can help things grow","Seeds grow without any care","Friends should work alone","Only fireflies can plant seeds"],0,"Think about what the three friends did together.","The story teaches care and teamwork."),
+ Q("Which character contributed by finding the planting place?",["Pip","Mira","Toma","None"],2,"Who showed them the soft soil?","Toma showed them the planting place."),
+ Q("What can you infer about Mira?",["She is caring","She dislikes nature","She is afraid of friends","She never listens"],0,"Use her decision to help the seed as a clue.","Mira's actions show that she is caring."),
+ Q("Why did the friends keep visiting the seed?",["To care for it and see its growth","To look for a lost bell","To collect stones","To build a house"],0,"What were they hoping to see?","They wanted to care for the seed as it grew."),
+ Q("Which title best expresses the story's message?",["The Lost River","A Little Seed, A Caring Team","The Angry Turtle","A Night Without Stars"],1,"Choose a title that includes both the seed and the friends' actions.","The title highlights the seed and teamwork.")
+ ]],
+ bell:[
+ [
+ Q("What was missing on Monday morning?",["A classroom bell","A storybook","A pencil case","A paper star"],0,"Read the first sentence.","The class bell was missing."),
+ Q("Who noticed the paper stars?",["Ben","Ana","Lito","The teacher"],1,"Find the sentence that begins with Ana.","Ana noticed the paper stars."),
+ Q("Where were the paper stars found?",["Near the bookshelf","Under a desk","Outside the gate","In the garden"],0,"Look for the location Ana noticed.","They were near the bookshelf."),
+ Q("What had the class made on Friday?",["Paper decorations","A wooden box","A new bell","A story map"],0,"Ben remembered an activity.","They made paper decorations."),
+ Q("Who checked behind the big storybook basket?",["Ana","Ben","Lito","The principal"],2,"Find the sentence that tells what Lito checked.","Lito checked behind the basket."),
+ Q("What did Lito find?",["A note","A key","A book","A ribbon"],0,"What was behind the basket?","Lito found a note."),
+ Q("Why had the teacher placed the bell in a box?",["To keep it safe during cleaning","To give it to another class","To hide it forever","To use it as a decoration"],0,"Read the note and the sentence after it.","The teacher wanted to keep it safe."),
+ Q("Where was the bell placed?",["Inside a decorated box","Under the school","On the roof","In Ana's bag"],0,"The story explains where the teacher put it.","It was inside a decorated box."),
+ Q("What did the children do with the box?",["Returned it to the teacher","Threw it away","Took it home","Left it outside"],0,"What happened after they understood the note?","They returned the box to the teacher."),
+ Q("What did the children learn?",["Sharing clues helps people understand","Books should be hidden","Decorations are not useful","Mysteries cannot be solved"],0,"Look at the final sentence.","Sharing information helps people understand clues.")
+ ],
+ [
+ Q("What does 'noticed' mean?",["Saw or became aware of","Forgot completely","Carried carefully","Made something"],0,"Ana paid attention to the paper stars.","Noticed means saw or became aware of."),
+ Q("Which word is closest in meaning to 'missing'?",["Lost","Found","Decorated","Safe"],0,"The class could not find the bell.","Missing means lost or not present."),
+ Q("What does 'trail' mean in the story?",["A line or series to follow","A loud noise","A classroom rule","A kind of bell"],0,"The stars formed a path near the shelf.","A trail is a line or series that can be followed."),
+ Q("Which word means the opposite of 'safe'?",["Protected","Secure","Dangerous","Careful"],2,"Think of the opposite of being protected.","Dangerous is the opposite of safe."),
+ Q("What does 'remembered' mean?",["Brought back to mind","Ran away","Covered with paper","Asked a question"],0,"Ben thought about Friday's activity.","Remembered means brought back to mind."),
+ Q("Which word describes Ana's observation?",["Careful","Careless","Noisy","Unfair"],0,"She paid attention to small details.","Careful describes her observation."),
+ Q("In the story, 'clues' are —",["Hints that help solve something","Things used for painting","Classroom decorations only","Names of students"],0,"The children used clues to understand the mystery.","Clues are hints or pieces of information."),
+ Q("What is a synonym for 'returned'?",["Gave back","Hid","Broke","Forgot"],0,"The children brought the box back.","Returned means gave back."),
+ Q("What does 'decorated' mean?",["Made more attractive with designs","Made smaller","Put away","Washed"],0,"The box had a special appearance.","Decorated means made attractive with designs."),
+ Q("Which word best describes the children's work?",["Teamwork","Quarrelling","Guessing without thinking","Avoiding"],0,"They shared what each person knew.","Their work showed teamwork.")
+ ],
+ [
+ Q("Why did the children search for clues instead of giving up?",["They wanted to solve the mystery","They wanted to make a new bell","They wanted to skip class","They wanted to hide the books"],0,"Think about their decision at the start.","They wanted to find out what happened."),
+ Q("How did Ben help solve the mystery?",["He remembered Friday's decorations","He found the note","He hid the bell","He called the school"],0,"What information did Ben share?","Ben connected the paper stars with Friday's activity."),
+ Q("Why was the note important?",["It explained why the bell was kept safe","It gave the children homework","It named a new teacher","It showed where to buy a bell"],0,"What did the note say?","The note explained that the bell was being kept safe."),
+ Q("What can you infer about Lito?",["He is observant and curious","He does not like reading","He is careless","He is afraid of the bookshelf"],0,"Use his decision to check behind the basket.","Lito looked carefully for more information."),
+ Q("Which action shows responsible behavior?",["Returning the box to the teacher","Keeping the bell secretly","Throwing away the note","Blaming a classmate"],0,"Which choice respects classroom property?","Returning the box was responsible."),
+ Q("What is the best summary of the story?",["Three classmates share clues and discover the teacher kept the bell safe","A class makes a new classroom","A bell rings during a program","A student loses a book"],0,"Choose the answer that includes the problem and solution.","The summary includes the missing bell, clues, and discovery."),
+ Q("What would be the best next step if the note had been unclear?",["Ask the teacher politely for more information","Tear the note","Accuse someone","Stop looking forever"],0,"Think of a safe and sensible way to clarify information.","Asking the teacher would help."),
+ Q("Which detail helped connect the stars to the bell's location?",["The class had made decorations on Friday","The weather was sunny","Ana liked reading","The bell was loud"],0,"Ben's memory connected two events.","The paper stars were linked to the class decorations."),
+ Q("What is the author's likely purpose?",["To entertain and show the value of teamwork","To explain how to build a bell","To sell decorations","To teach a science experiment"],0,"Think about the mystery and its lesson.","The story entertains while showing teamwork."),
+ Q("Which statement is supported by the story?",["The teacher hid the bell to protect it during cleaning","Ana took the bell home","Ben made the bell","Lito broke the box"],0,"Choose only what the story tells you.","The teacher placed the bell safely in a box.")
+ ]],
+ river:[
+ [
+ Q("Where did Kai and Lila go on Saturday morning?",["To the river","To the library","To the market","To the mountain"],0,"Read the first sentence.","They walked to the river with their grandmother."),
+ Q("Who went with the children?",["Their teacher","Their grandmother","Their cousin","Their neighbor"],1,"The first sentence names the adult.","Their grandmother went with them."),
+ Q("What did they see near the riverbank?",["Paper boats","Empty snack wrappers and leaves","A broken bicycle","A school bag"],1,"Look at what they noticed when they arrived.","They saw leaves and empty snack wrappers."),
+ Q("What did Kai use to pick up the dry wrappers?",["A shovel","A pair of gloves","A basket of fruit","A towel"],1,"Find the sentence about Kai's task.","Kai used a pair of gloves."),
+ Q("Where did Lila place the fallen leaves?",["In a compost basket","In the river","On the road","In her bag"],0,"Read the sentence about Lila.","Lila placed the leaves in a compost basket."),
+ Q("What kind of bird watched from a branch?",["A parrot","A kingfisher","An owl","A chicken"],1,"The bird is named Kiko.","Kiko was a kingfisher."),
+ Q("What were swimming in the clear part of the river?",["Ducks","Small fish","Frogs","Turtles"],1,"Kiko flew toward the clear water.","Small fish were swimming there."),
+ Q("Whom did the children ask to help?",["Their neighbors","Tourists","Shopkeepers only","Their classmates only"],0,"Look near the end of the story.","They asked their neighbors to help."),
+ Q("When did the riverbank look better?",["At sunrise","By afternoon","The next week","At midnight"],1,"Find the sentence after the neighbors helped.","By afternoon, the riverbank looked better."),
+ Q("What did Kai and Lila learn?",["Only adults can help","Small actions matter when people work together","Rivers clean themselves","Litter helps fish"],1,"Read the final sentence.","They learned that community teamwork makes a difference.")
+ ],
+ [
+ Q("What does 'litter' mean in the story?",["Rubbish left in a place","A kind of fish","Clean water","A river plant"],0,"Think about the wrappers near the riverbank.","Litter means rubbish left where it does not belong."),
+ Q("Which word is closest in meaning to 'community'?",["A group of people in one area","A single animal","A type of river","A school subject"],0,"The neighbors joined the children.","A community is a group of people living in the same area."),
+ Q("What does 'compost' refer to?",["A place or material for decaying organic waste","A plastic wrapper","A kind of bird","A river stone"],0,"Lila put fallen leaves into the compost basket.","Compost is made from decayed natural materials."),
+ Q("Which word is the opposite of 'clean'?",["Fresh","Dirty","Clear","Neat"],1,"Think of the river before the clean-up.","Dirty is the opposite of clean."),
+ Q("What does 'harm' mean?",["Help","Keep safe","Cause damage or hurt","Make brighter"],2,"The grandmother warned that litter can affect animals.","Harm means to cause damage or hurt."),
+ Q("Which word best describes Kai and Lila?",["Helpful","Careless","Unkind","Lazy"],0,"They chose to improve the riverbank.","Helpful describes people who give support."),
+ Q("What does 'wrappers' mean?",["Covers around snacks or items","Water animals","Tree branches","Fishing nets"],0,"The story mentions empty snack wrappers.","Wrappers are materials covering products."),
+ Q("Which word is closest in meaning to 'powerful' in the final lesson?",["Effective","Weak","Silent","Tiny"],0,"Small actions can create a big result.","Powerful here means having a strong effect."),
+ Q("What does 'neighbor' mean?",["Someone who lives nearby","A person from a faraway country","A river animal","A school book"],0,"The children asked nearby people to help.","A neighbor is someone who lives near you."),
+ Q("Which word best replaces 'noticed' in the story?",["Observed","Forgot","Hid","Dropped"],0,"Kai and Lila saw the litter when they arrived.","Observed means watched or noticed carefully.")
+ ],
+ [
+ Q("Why did Grandmother explain that litter can harm animals?",["To help the children understand why the river should be clean","To make them afraid of birds","To stop them visiting the river","To teach them to catch fish"],0,"Think about the reason she gave before they cleaned.","She wanted them to understand why protecting the river matters."),
+ Q("What can you infer about Kiko when it flew toward the clear water?",["It may be showing that the water is a place where fish live","It wanted to take the wrappers","It was looking for a classroom","It was asking for compost"],0,"Connect the bird's movement with the fish in the water.","Kiko's action draws attention to the fish and their habitat."),
+ Q("Why did Lila put leaves in a compost basket instead of the river?",["Leaves can be collected and turned into useful compost","Leaves make good snack wrappers","Fish need leaves to cover their eyes","The basket was used for catching fish"],0,"Think about the purpose of compost.","Composting is a better way to manage fallen leaves."),
+ Q("What might happen if people keep throwing rubbish near the river?",["The river may become polluted and animals may be harmed","The water will always become clearer","More fish will automatically appear","The riverbank will turn into a garden"],0,"Use Grandmother's warning as a clue.","Rubbish can pollute water and harm living things."),
+ Q("Which action best shows community cooperation?",["The children invite neighbors to help clean the riverbank","Kai works alone and tells no one","Lila throws leaves into the water","The neighbors ignore the river"],0,"Look for the part where more people become involved.","Inviting neighbors helps everyone work toward one goal."),
+ Q("What is the main idea of the story?",["Working together helps protect the environment","Birds should live in houses","Children should avoid rivers","All leaves are harmful"],0,"Choose the idea that connects the whole story.","The story focuses on teamwork and caring for the river."),
+ Q("Which detail best supports the idea that the clean-up helped?",["By afternoon, the riverbank looked better","Kiko sat on a branch","They went on Saturday","Grandmother walked with them"],0,"Find the result of their actions.","The improved riverbank shows the clean-up made a difference."),
+ Q("If the children saw more litter next weekend, what would be the best response?",["Organize another safe clean-up with adults and neighbors","Push all the rubbish into the river","Ignore it because they cleaned once","Blame the fish"],0,"Choose a safe action that follows the story's lesson.","Working with others and adults is a sensible way to continue helping."),
+ Q("What is the author's likely purpose?",["To entertain while encouraging care for the environment","To explain how to build a boat","To teach bird-catching skills","To describe a school competition"],0,"Think about the problem and lesson in the story.","The story encourages readers to care for nature."),
+ Q("Which statement is the best conclusion?",["Protecting nature is easier when people take responsibility together","Only birds can keep rivers clean","One clean-up means people never need to help again","Rubbish is useful to all river animals"],0,"Use the children's actions and the final lesson.","The story shows that shared responsibility helps protect nature.")
+ ]]
+};
+let selectedTeam=0,activeStory=null,tier=0,index=0,answered=false,recording=null,recorder=null,chunks=[],teamScores=[0,0,0,0],teamCorrect=[0,0,0,0],teamAttempts=[0,0,0,0],tierScores=[0,0,0],tierPassed=[false,false,false],sessionResults=[];
+const tierNames=["Literal Comprehension","Vocabulary Recognition","Critical Thinking & Inference"];
+const tierDescriptions=["TIER 1 • EASY START","TIER 2 • WORD DETECTIVE","TIER 3 • THINK DEEPER"];
+function renderTeams(){document.getElementById("teamGrid").innerHTML=teams.map((t,i)=>`<button class="team ${i===selectedTeam?'selected':''}" onclick="selectTeam(${i})"><span class="mascot">${t.emoji}</span><strong>${t.name}</strong><small>${t.motto}</small></button>`).join("");document.getElementById("selectedTeamNote").textContent="Selected team: "+teams[selectedTeam].emoji+" "+teams[selectedTeam].name;}
+function selectTeam(i){selectedTeam=i;renderTeams();speak(teams[i].name+" selected. Tap next to choose a story.");}
+function goToStories(){document.getElementById("teamPage").classList.add("hidden");document.getElementById("storyPage").classList.remove("hidden");document.getElementById("storyTeamNote").textContent="Your team: "+teams[selectedTeam].emoji+" "+teams[selectedTeam].name;renderStories();window.scrollTo({top:0,behavior:"smooth"});}
+function backToTeams(){document.getElementById("storyPage").classList.add("hidden");document.getElementById("teamPage").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});}
+function renderStories(){document.getElementById("storyGrid").innerHTML=stories.map((s,i)=>`<article class="story-card" role="button" tabindex="0" onclick="startStory('${s.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();startStory('${s.id}')} "><div class="story-art">${s.emoji} <span style="font-size:38px">✨</span></div><div class="story-info"><h3>${s.title}</h3><p>${s.description}</p><div class="story-meta"><span class="tag">📘 3 tiers</span><span class="tag">❓ 30 questions</span><span class="tag">Grade 4</span></div><div style="margin-top:14px"><span class="cloud-btn primary" style="display:inline-block">☁ Choose this story</span></div></div></article>`).join("");}
+function startStory(id){activeStory=stories.find(s=>s.id===id);tier=0;index=0;tierScores=[0,0,0];tierPassed=[false,false,false];document.getElementById("home").classList.add("hidden");document.getElementById("game").classList.remove("hidden");document.getElementById("gameTitle").textContent=activeStory.title;document.getElementById("storyText").textContent=activeStory.text;renderCharacters();renderScoreboard();loadQuestion();window.scrollTo({top:0,behavior:"smooth"});}
+function renderCharacters(){document.getElementById("characters").innerHTML=activeStory.characters.map((c,i)=>`<div class="character"><button onclick="openCharacter(${i})"><span class="figure">${c[1]}</span><small>${c[0]}</small></button></div>`).join("");}
+function openCharacter(i){const c=activeStory.characters[i];openModal(`<h2>Meet ${c[0]}!</h2><div class="modal-character">${c[1]}</div><p>${c[2]}</p><button class="cloud-btn primary" onclick="speak(${JSON.stringify(c[2])})">🔊 Hear character</button> <button class="cloud-btn" onclick="closeModal()">Close</button>`);}
+function loadQuestion(){const q=bank[activeStory.id][tier][index];answered=false;document.getElementById("tierStat").textContent=`Tier ${tier+1} • ${tierNames[tier]}`;document.getElementById("tierPill").textContent=tierDescriptions[tier];document.getElementById("questionStat").textContent=`Question ${index+1} of 10`;document.getElementById("questionText").textContent=q.q;document.getElementById("answers").innerHTML=q.opts.map((o,i)=>`<button class="answer" onclick="chooseAnswer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join("");document.getElementById("feedback").classList.add("hidden");document.getElementById("hintBox").classList.add("hidden");document.getElementById("nextBtn").disabled=true;document.getElementById("nextBtn").textContent=index===9?(tier===2?"☁ Finish tier":"☁ Continue"):"☁ Next question";document.getElementById("progress").style.width=((tier*10+index)/30*100)+"%";document.getElementById("guideText").textContent=tier===0?"Find the answer directly in the story. Look for names, places, and events.":tier===1?"Be a word detective! Use the sentence around the word to understand its meaning.":"Think beyond the sentence. Use clues to infer, explain, and choose the best conclusion.";document.getElementById("teamStat").textContent=teams[selectedTeam].emoji+" "+teams[selectedTeam].name;document.getElementById("scoreStat").textContent="⭐ "+teamScores[selectedTeam]+" points";}
+function chooseAnswer(i){if(answered)return;answered=true;const q=bank[activeStory.id][tier][index],buttons=[...document.querySelectorAll(".answer")];teamAttempts[selectedTeam]++;if(i===q.a){buttons[i].classList.add("correct");teamScores[selectedTeam]+=10;teamCorrect[selectedTeam]++;tierScores[tier]++;document.getElementById("feedback").textContent="🌟 Correct! "+q.why;document.getElementById("guideText").textContent="Excellent reading! Your team found the correct answer. Explain which clue helped you.";speak("Correct! "+q.why);}else{buttons[i].classList.add("wrong");buttons[q.a].classList.add("correct");document.getElementById("feedback").textContent="Good try! "+q.why+" Read the explanation, then use it to learn.";document.getElementById("guideText").textContent="Good effort. Mistakes help readers learn. Look at the correct answer and think about the clue.";speak("Good try. "+q.why);}document.getElementById("feedback").classList.remove("hidden");document.getElementById("nextBtn").disabled=false;document.getElementById("scoreStat").textContent="⭐ "+teamScores[selectedTeam]+" points";renderScoreboard();}
+function showHint(){const q=bank[activeStory.id][tier][index];const box=document.getElementById("hintBox");box.textContent="💡 HINT: "+q.h;box.classList.remove("hidden");document.getElementById("guideText").textContent="Here is a small clue. Use it to think again—your team can do it!";speak("Here is a hint. "+q.h);}
+function nextQuestion(){if(!answered)return;if(index<9){index++;loadQuestion();return;}const score=tierScores[tier];tierPassed[tier]=score>=7; if(tier<2){if(score>=7){openModal(`<h2>🌟 Tier ${tier+1} completed!</h2><div class="modal-character">🎉</div><p>Your team got <b>${score} out of 10</b>. You reached the goal of 7 correct answers. The next tier is ready!</p><button class="cloud-btn primary" onclick="closeModal();tier++;index=0;loadQuestion()">☁ Unlock next tier</button>`);}else{openModal(`<h2>🌱 Keep growing!</h2><div class="modal-character">🧩</div><p>Your team got <b>${score} out of 10</b>. The next tier is not locked forever. Review the story, discuss the questions, and try this tier again.</p><button class="cloud-btn primary" onclick="closeModal();index=0;tierScores[tier]=0;loadQuestion()">↻ Try this tier again</button><button class="cloud-btn" onclick="closeModal();showResults()">See team results</button>`);} }else{document.getElementById("progress").style.width="100%";showResults();}}
+function renderScoreboard(){document.getElementById("scoreboard").innerHTML=teams.map((t,i)=>`<div class="score-row"><span>${t.emoji} ${t.name}</span><b>${teamScores[i]} ⭐</b></div>`).join("");}
+function showResults(){const total=teamCorrect.reduce((a,b)=>a+b,0),attempts=teamAttempts.reduce((a,b)=>a+b,0);const pct=attempts?Math.round(total/attempts*100):0;const best=Math.max(...teamScores);const winner=teams[teamScores.indexOf(best)];openModal(`<h2>🏆 Reading Quest Results</h2><div class="modal-character">🏅</div><p><b>${activeStory?activeStory.title:"Class Reading Quest"}</b></p><p>Class correct answers: <b>${total}</b> out of ${attempts} attempts (${pct}%).</p><p>Leading team: <b>${winner.emoji} ${winner.name}</b> with ${best} points.</p><hr><p><b>Tier progress</b><br>${tierNames.map((n,i)=>`Tier ${i+1} — ${tierScores[i]}/10 ${tierPassed[i]?"✓ Goal reached":"• Keep practising"}`).join("<br>")}</p><p style="font-size:13px">Teacher tip: Ask learners to explain one answer using evidence from the story. The score is a practice guide, not a permanent label.</p><button class="cloud-btn primary" onclick="closeModal();goHome()">☁ Choose another story</button> <button class="cloud-btn" onclick="closeModal()">Close</button>`);}
+function readQuestion(){speak(document.getElementById("questionText").textContent);}
+function speakGuide(){speak(document.getElementById("guideText").textContent);}
+function speak(text){if(!("speechSynthesis"in window)){alert("Text-to-speech is not supported in this browser.");return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.9;u.pitch=1.08;speechSynthesis.speak(u);}
+function openVoice(){openModal(`<h2>🎙 READAPT Voice Studio</h2><p>Choose a voice for the reading guide, or record your own instructions. Browser voices depend on the device.</p><label>Reading voice</label><select id="voiceSelect"></select><label>Speaking speed</label><input id="speedRange" type="range" min=".7" max="1.2" step=".1" value=".9" style="width:100%"><button class="cloud-btn mint" onclick="testVoice()">▶ Test voice</button><hr><p><b>Record your own voice</b></p><div class="voice-row"><button class="cloud-btn pink" onclick="startRecording()">● Start recording</button><button class="cloud-btn" onclick="stopRecording()">■ Stop</button></div><audio id="modalAudio" controls class="hidden" style="width:100%;margin-top:10px"></audio><p id="modalRecordStatus" style="font-size:12px;color:#66758b">Recording is available when your browser supports microphone access.</p><button class="cloud-btn" onclick="closeModal()">Done</button>`);setTimeout(populateVoices,100);}
+function populateVoices(){const s=document.getElementById("voiceSelect");if(!s)return;const voices=speechSynthesis?.getVoices?.()||[];s.innerHTML=voices.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join("")||'<option value="">Default device voice</option>';}
+function testVoice(){const text="Hello, readers! Listen carefully, think about the story, and do your best.";const u=new SpeechSynthesisUtterance(text);const voices=speechSynthesis.getVoices();const s=document.getElementById("voiceSelect");if(s&&voices[s.value])u.voice=voices[s.value];u.rate=Number(document.getElementById("speedRange")?.value||.9);speechSynthesis.cancel();speechSynthesis.speak(u);}
+async function startRecording(){try{if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){alert("Audio recording is not supported in this browser. Try an updated Chrome or Edge browser.");return;}const stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];recorder=new MediaRecorder(stream);recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};recorder.onstop=()=>{const blob=new Blob(chunks,{type:"audio/webm"});const url=URL.createObjectURL(blob);["audioPlayback","modalAudio"].forEach(id=>{const a=document.getElementById(id);if(a){a.src=url;a.classList.remove("hidden");}});stream.getTracks().forEach(t=>t.stop());setRecordStatus("Recording saved for this browser session. Use the audio player to listen.");};recorder.start();setRecordStatus("🔴 Recording... speak clearly.");}catch(e){setRecordStatus("Microphone permission was not granted or is unavailable.");}}
+function stopRecording(){if(recorder&&recorder.state!=="inactive"){recorder.stop();}else setRecordStatus("There is no active recording.");}
+function setRecordStatus(t){["recordStatus","modalRecordStatus"].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=t;});}
+function goHome(){document.getElementById("game").classList.add("hidden");document.getElementById("home").classList.remove("hidden");document.getElementById("storyPage").classList.add("hidden");document.getElementById("teamPage").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});}
+function showGuide(){openModal(`<h2>🌈 Welcome to READAPT!</h2><p><b>1. Choose a team.</b> Only the four team choices appear first. Stories stay hidden until a team is selected and Next is tapped.</p><p><b>2. Choose a story.</b> The next page shows three story choices. Each story has 30 questions across three tiers.</p><p><b>3. Complete three tiers.</b><br>Tier 1: Literal Comprehension — find information stated in the story.<br>Tier 2: Vocabulary Recognition — understand words and meanings.<br>Tier 3: Critical Thinking & Inference — use clues, explain, and draw conclusions.</p><p><b>4. Use Cloud Hints.</b> Hints support learners without immediately giving away the answer.</p><p><b>5. Review results.</b> A team needs at least 7 correct answers out of 10 to unlock the next tier. If not, the team can retry after review.</p><p><b>Teacher note:</b> For whole-class participation, project the website and rotate the answering team each question. Let all learners discuss before the team speaker selects an answer.</p><button class="cloud-btn primary" onclick="closeModal()">Let's read!</button>`);}
+function openModal(content){document.getElementById("modalContent").innerHTML=content;document.getElementById("modalBackdrop").classList.remove("hidden");}
+function closeModal(){document.getElementById("modalBackdrop").classList.add("hidden");}
+/* ===== READAPT INNOVATION: shell, feelings, voice, music, profile ===== */
+const $=id=>document.getElementById(id),pk=a=>a[Math.floor(Math.random()*a.length)],ls=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const IC={home:'<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/>',play:'<path d="M7 9h10a4 4 0 014 4v2a3 3 0 01-5 2l-1-1H9l-1 1a3 3 0 01-5-2v-2a4 4 0 014-4z"/><path d="M8 12v3M6.5 13.5h3"/><circle cx="16" cy="13" r=".8"/>',feelings:'<circle cx="12" cy="12" r="9"/><path d="M8 14q4 4 8 0"/><circle cx="9" cy="10" r=".6"/><circle cx="15" cy="10" r=".6"/>',voice:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/>',about:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.5" r=".8"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-5 4-7 8-7s8 2 8 7z"/>'};
+const NAV=[["home","Home"],["play","Play"],["feelings","Feelings"],["voice","Voice"],["about","About"],["me","Profile"]];
+$("home").parentNode.insertAdjacentHTML("beforebegin",`<nav class="pnav">${'<div class="plogo" onclick="showView(\'home\')"><span>READAPT</span><i></i></div><div class="pdiv"></div>'}${NAV.map(([v,t])=>`<button class="pb${v==="home"?" on":""}" data-v="${v}" aria-label="${t}" title="${t}" onclick="${v==="voice"?"openVoice()":`showView('${v}')`}"><svg viewBox="0 0 24 24">${IC[v]}</svg></button>`).join("")}</nav>`);
+document.querySelector("main").insertAdjacentHTML("beforeend",`<section id="feelings" class="hidden"><div class="section"><div class="section-head"><div><h2>💛 Feelings Friends</h2><p>Every feeling is okay. Tap a friend to hear how they feel — and what helps. They also cheer for you during the quiz!</p></div></div><div class="feel-grid" id="feelGrid"></div><p id="feelMsg" style="font-weight:900;margin-top:16px"></p></div></section>
+<section id="about" class="hidden"><div class="section"><div class="section-head"><div><h2>ℹ️ About READAPT</h2><p>Responsive &amp; Adaptive Digital Tiered Reading for Grade 4 — read, think, and discover together.</p></div></div><div class="about-grid">
+<div><h3>🪜 Three tiers</h3><p>Tier 1 finds facts in the story. Tier 2 builds word power. Tier 3 asks you to infer and think deeper. Reach 7 of 10 to unlock the next tier.</p></div>
+<div><h3>💛 Feelings Friends</h3><p>Sunny cheers for right answers. Drippy and Jitters comfort you when an answer misses, and Breezy helps you breathe and try again. Mistakes help readers grow.</p></div>
+<div><h3>🎙 Your own voice</h3><p>Record a cheer, a “try again” and the instructions in your own voice. READAPT plays them back during the quiz. Pick a reading voice and speed too.</p></div>
+<div><h3>🎵 Music &amp; sound</h3><p>Soft background music helps the room feel calm. Turn it on or off with the 🎵 button. It lowers itself when a voice is speaking.</p></div>
+<div><h3>👩‍🏫 For teachers</h3><p>Let teams discuss before answering, then ask them to point to the clue in the story. Scores are a practice guide, not a label.</p></div>
+<div><h3>🔒 Privacy</h3><p>Profiles, scores and recordings stay on this device. No online account is created and nothing is uploaded.</p></div></div></div></section>
+<section id="me" class="hidden"><div class="plogo" style="justify-content:center;font-size:44px">READAPT<i style="width:26px;height:26px"></i></div><div class="acard"><div class="atabs"><button id="tab0" onclick="acctTab(0)">Register</button><button id="tab1" onclick="acctTab(1)">Login</button></div><div class="abody" id="acctBody"></div><div class="legal">By creating a profile, you agree that your reading progress is saved only on this device and is never shared. Ask a teacher or parent if you need help.</div></div></section>
+<div id="react"></div><button id="musicBtn" aria-label="Music" onclick="toggleMusic()">🎵</button><div id="doodles"></div>
+`);
+document.body.append($("doodles"),$("react"),$("musicBtn"));
+function showView(v){["home","game","feelings","about","me"].forEach(i=>$(i).classList.add("hidden"));const t=v==="play"?(activeStory?"game":"home"):v;$(t).classList.remove("hidden");document.querySelectorAll(".pb").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+ if(v==="feelings")renderFeel();if(v==="me")acctTab(CUR?2:0);window.scrollTo({top:0});if(v==="play"&&!activeStory)setTimeout(()=>$("teamPage").scrollIntoView({behavior:"smooth"}),60)}
+const _gh=goHome;goHome=function(){_gh();showView("home")};const _ss=startStory;startStory=function(id){_ss(id);streak=0;wrongRun=0;showView("play");setGuide("joy");voiceMusic()};
+/* doodle sky: hand-drawn sun, clouds, stars, moon */
+$("doodles").innerHTML=`<svg width="0" height="0"><filter id="rough"><feTurbulence baseFrequency=".04" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter></svg>`+[[3,12,70,'<circle cx="35" cy="35" r="14" fill="#ffb13b" stroke="#ff7a2f" stroke-width="4"/><path d="M35 4v9M35 57v9M4 35h9M57 35h9M13 13l6 6M51 51l6 6M57 13l-6 6M13 57l6-6" stroke="#ff7a2f" stroke-width="4" stroke-linecap="round"/>'],[78,20,90,'<path d="M20 50q-14 0-14-12t14-12q4-16 22-14t20 16q18 0 18 12t-16 10z" fill="#fff" stroke="#8fd3ff" stroke-width="4"/>'],[88,62,56,'<path d="M30 4l7 17 18 1-14 12 5 18-16-10-16 10 5-18L5 22l18-1z" fill="#ffd34a" stroke="#ff9d2e" stroke-width="3.5" stroke-linejoin="round"/>'],[6,70,60,'<path d="M44 8a26 26 0 100 44A20 20 0 0144 8z" fill="#ffe27a" stroke="#ff9d2e" stroke-width="3.5"/>'],[45,84,80,'<path d="M20 50q-14 0-14-12t14-12q4-16 22-14t20 16q18 0 18 12t-16 10z" fill="#fff" stroke="#8fd3ff" stroke-width="4"/>']].map(([l,t,w,p],i)=>`<svg style="left:${l}%;top:${t}%;width:${w}px;animation-delay:${-i*1.3}s" viewBox="0 0 80 70" filter="url(#rough)">${p}</svg>`).join("");
+/* ===== feelings buddies (original characters) ===== */
+const BM={joy:{c:"#ffd93b",n:"Sunny",f:"joyful",say:"I feel joyful when we learn together!",tip:"Share your smile with a friend.",p:3.2,b:"M30 40q12-11 24-2M66 38q12-9 24 2",m:'<path d="M36 70q24 30 48 0z" fill="#8b1d3a" stroke="#3a1a1a" stroke-width="3" stroke-linejoin="round"/><path d="M46 82q14 9 28 0" fill="#ff8aa5"/>',ch:1},
+sad:{c:"#4f7be0",n:"Drippy",f:"sad",say:"I feel sad sometimes, and that is okay. Tears wash the heavy feelings away.",tip:"Talk to someone you trust. A hug helps.",p:3.6,dn:3,b:"M28 46q14-2 24-12M92 46q-14-2-24-12",m:'<path d="M44 86q16-15 32 0" fill="none" stroke="#1d2a5a" stroke-width="4.5" stroke-linecap="round"/>',x:'<path class="tr" d="M34 70q-6 10 0 14q6-4 0-14z" fill="#aee4ff"/>'},
+anxious:{c:"#a77be0",n:"Jitters",f:"worried",say:"My tummy flutters when I feel worried. I try to slow down.",tip:"Breathe in for four, out for four.",p:2,b:"M30 36q12-9 24 0M66 36q12-9 24 0",m:'<path d="M38 84q7-9 14 0t14 0t14 0" fill="none" stroke="#3a2260" stroke-width="4.5" stroke-linecap="round"/>',x:'<path class="sw" d="M98 34q-7 11 0 15q7-4 0-15z" fill="#aee4ff"/><path class="sw" d="M20 50q-6 9 0 12q6-3 0-12z" fill="#aee4ff"/>'},
+angry:{c:"#ef4b3f",n:"Grumble",f:"angry",say:"I feel angry when something seems unfair. I count to ten.",tip:"Stomp your feet, then take deep breaths.",p:3,b:"M26 34l28 12M94 34l-28 12",m:'<path d="M36 82h48v10H36z" fill="#fff" stroke="#3a1a1a" stroke-width="3.5"/><path d="M48 82v10M60 82v10M72 82v10" stroke="#3a1a1a" stroke-width="2.5"/>'},
+proud:{c:"#ff9a3c",n:"Beamy",f:"proud",say:"I feel proud when I try my best and keep going!",tip:"Tell a friend what you worked hard on.",closed:1,b:"M30 40q12-8 24 0M66 40q12-8 24 0",m:'<path d="M38 70q22 22 44 0" fill="none" stroke="#3a1a1a" stroke-width="4.5" stroke-linecap="round"/>',ch:1},
+calm:{c:"#3cc6b3",n:"Breezy",f:"calm",say:"I feel calm when I breathe slowly. In... and out...",tip:"Close your eyes and count five slow breaths.",p:3,lid:1,b:"M32 42q10-4 22 0M66 42q10-4 22 0",m:'<path d="M46 80q14 9 28 0" fill="none" stroke="#1d5a52" stroke-width="4.5" stroke-linecap="round"/>',ch:1}};
+function buddy(k){const o=BM[k],E=(x)=>o.closed?"":`<ellipse cx="${x}" cy="58" rx="12" ry="14" fill="#fff" stroke="#3a1a1a" stroke-width="2.5"/><circle cx="${x}" cy="${58+(o.dn||0)}" r="${o.p}" fill="#222"/>`;
+ return `<svg viewBox="0 0 120 120"><circle cx="60" cy="62" r="50" fill="${o.c}" stroke="#0003" stroke-width="3"/>${o.closed?'<path d="M30 62q12-16 24 0M66 62q12-16 24 0" fill="none" stroke="#3a1a1a" stroke-width="4.5" stroke-linecap="round"/>':E(42)+E(78)}${o.lid?`<rect x="29" y="42" width="26" height="16" fill="${o.c}"/><rect x="65" y="42" width="26" height="16" fill="${o.c}"/>`:""}<path d="${o.b}" fill="none" stroke="#2a1a1a" stroke-width="4.5" stroke-linecap="round"/>${o.m}${o.ch?'<circle cx="22" cy="74" r="7" fill="#ff7f9f" opacity=".5"/><circle cx="98" cy="74" r="7" fill="#ff7f9f" opacity=".5"/>':""}${o.x||""}</svg>`}
+function setGuide(m){const a=document.querySelector(".assistant-avatar");if(a)a.innerHTML=`<div class="bd ${m}">${buddy(m)}</div>`}
+let rt;function rain(list){for(let i=0;i<16;i++){const s=document.createElement("span");s.className="pt";s.textContent=pk(list);s.style.cssText=`left:${Math.random()*96}%;--dx:${Math.random()*80-40}px;animation-delay:${Math.random()*.7}s`;document.body.append(s);setTimeout(()=>s.remove(),3400)}}
+function react(ms,msg,fx){const r=$("react");r.innerHTML=`<div class="rb">${ms.map(m=>`<div class="bd ${m}">${buddy(m)}</div>`).join("")}</div><div class="rbub">${msg}</div>`;r.classList.add("show");clearTimeout(rt);rt=setTimeout(()=>r.classList.remove("show"),3400);setGuide(ms[0]);rain(fx)}
+function renderFeel(){$("feelGrid").innerHTML=Object.keys(BM).map(k=>`<div class="feel" onclick="feelTap('${k}',this)"><div class="bd ${k}">${buddy(k)}</div><b>${BM[k].n}</b><small>feels ${BM[k].f}</small></div>`).join("")}
+function feelTap(k,el){document.querySelectorAll(".feel").forEach(e=>e.classList.remove("on"));el.classList.add("on");$("feelMsg").textContent=`${BM[k].n}: “${BM[k].say}” 💡 ${BM[k].tip}`;speak(BM[k].say+" "+BM[k].tip,k);sv("ra_mood",k)}
+/* ===== music: soft generated tune that lowers while voices speak ===== */
+let AC,mg,mOn=ls("ra_music",true),mVol=ls("ra_mvol",.5),mT,mStep=0,mPos=2;
+function tone(f,t,d,ty,v){const o=AC.createOscillator(),g=AC.createGain();o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.03);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(mg);o.start(t);o.stop(t+d+.05)}
+function musicStart(){if(!mOn)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume();if(!mg){mg=AC.createGain();mg.connect(AC.destination)}mg.gain.value=.16*mVol;if(mT)return;const sc=[0,2,4,7,9,12,14,16],ch=[[0,4,7],[-3,0,4],[-7,-3,0],[-5,-1,2]];
+ mT=setInterval(()=>{const t=AC.currentTime+.05,b=261.63;if(mStep%8===0)ch[(mStep/8)%4].forEach(s=>tone(b/2*Math.pow(2,s/12),t,3.1,"triangle",.5));mPos=Math.max(0,Math.min(7,mPos+pk([-2,-1,0,1,2])));if(Math.random()<.8)tone(b*Math.pow(2,sc[mPos]/12),t,.7,"sine",.7);mStep++},420)}catch(e){}}
+function musicStop(){clearInterval(mT);mT=0}
+function toggleMusic(){mOn=!mOn;sv("ra_music",mOn);$("musicBtn").textContent=mOn?"🎵":"🔇";mOn?musicStart():musicStop()}
+function voiceMusic(){}function duck(on){if(mg)mg.gain.value=(on?.04:.16)*mVol}
+addEventListener("pointerdown",()=>{if(mOn&&!mT)musicStart()},{once:false});$("musicBtn").textContent=mOn?"🎵":"🔇";
+/* ===== voices: expressive TTS + your recorded clips ===== */
+let VS=ls("ra_vs",{v:"",r:.92,p:1.12}),CL=ls("ra_clips",{}),curAud;
+const vsc=v=>(/natural|neural|online|enhanced|premium/i.test(v.name)?50:0)+(/ana|aria|jenny|samantha|karen|google|zira/i.test(v.name)?8:0);
+const EN=()=>speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)).sort((a,b)=>vsc(b)-vsc(a));
+function speak(text,mood){return new Promise(res=>{if(!("speechSynthesis"in window)){res();return}speechSynthesis.cancel();duck(1);const vs=EN(),v=vs.find(x=>x.name===VS.v)||vs[0],parts=String(text).match(/[^.!?]+[.!?]*/g)||[text];let n=0;const fin=()=>{duck(0);res()};
+ parts.forEach((t,i)=>{const s=t.trim();if(!s)return;const u=new SpeechSynthesisUtterance(s);if(v){u.voice=v;u.lang=v.lang}let p=VS.p,r=VS.r;if(/!/.test(s)){p+=.14;r+=.06}if(/\?/.test(s))p+=.1;if(mood==="sad"||mood==="anxious"||/good try|oops|oh no/i.test(s)){p-=.12;r-=.12}if(mood==="calm"){r-=.12}u.pitch=Math.max(.3,Math.min(2,p));u.rate=Math.max(.5,Math.min(1.4,r));if(i===parts.length-1){u.onend=fin;u.onerror=fin}speechSynthesis.speak(u);n++});if(!n)fin();setTimeout(fin,String(text).length*140+4000)})}
+function playClip(k){return new Promise(res=>{if(!CL[k]){res(false);return}try{curAud&&curAud.pause();duck(1);curAud=new Audio(CL[k]);curAud.onended=curAud.onerror=()=>{duck(0);res(true)};curAud.play().catch(()=>{duck(0);res(false)})}catch(e){res(false)}})}
+function speakGuide(){playClip("guide").then(ok=>{if(!ok)speak($("guideText").textContent)})}
+function readQuestion(){speak($("questionText").textContent)}
+function populateVoices(){const s=$("voiceSelect");if(!s)return;s.innerHTML=EN().map(v=>`<option value="${v.name}" ${v.name===VS.v?"selected":""}>${v.name} (${v.lang})</option>`).join("")||'<option value="">Default device voice</option>'}
+function testVoice(){speak("Hello, readers! Listen carefully, think about the story, and do your best!")}
+const SLOTS=[["ok","🌟 Correct-answer cheer"],["no","💛 Try-again encouragement"],["guide","📣 Instructions / welcome"]];
+function openVoice(){document.querySelectorAll(".pb").forEach(b=>b.classList.toggle("on",b.dataset.v==="voice"));openModal(`<h2>🎙 Voice &amp; Sound Studio</h2><p>Pick a reading voice (names with <b>Natural</b> or <b>Online</b> sound most human), or record <b>your own voice</b> for the cheers.</p><label>Reading voice</label><select id="voiceSelect" onchange="VS.v=this.value;sv('ra_vs',VS)"></select><label>Speed</label><input type="range" min=".7" max="1.2" step=".02" value="${VS.r}" style="width:100%" oninput="VS.r=+this.value;sv('ra_vs',VS)"><label>Voice pitch (higher = friendlier for kids)</label><input type="range" min=".8" max="1.5" step=".02" value="${VS.p}" style="width:100%" oninput="VS.p=+this.value;sv('ra_vs',VS)"><button class="cloud-btn mint" onclick="testVoice()">▶ Test voice</button><hr><label>🎵 Music volume</label><input type="range" min="0" max="1" step=".05" value="${mVol}" style="width:100%" oninput="mVol=+this.value;sv('ra_mvol',mVol);duck(0)"> <button class="cloud-btn" onclick="toggleMusic()">Music on/off</button><hr><p><b>Record your own voice</b></p>${SLOTS.map(([k,t])=>`<div class="clip"><b>${t}</b><button onclick="recStart('${k}')">● Record</button><button onclick="recStop()">■ Stop</button><button onclick="playClip('${k}')">▶ Play</button><button onclick="delClip('${k}')">🗑</button><span id="st_${k}" style="font-size:12px;color:#65748b">${CL[k]?"Saved ✓":"No recording"}</span></div>`).join("")}<button class="cloud-btn primary" onclick="closeModal()">Done</button>`);setTimeout(populateVoices,150)}
+let rec,rk;async function recStart(k){try{if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){alert("Recording needs an updated Chrome, Edge or Safari.");return}const st=await navigator.mediaDevices.getUserMedia({audio:true}),ch=[];rk=k;rec=new MediaRecorder(st);rec.ondataavailable=e=>e.data.size&&ch.push(e.data);rec.onstop=()=>{st.getTracks().forEach(t=>t.stop());const fr=new FileReader();fr.onload=()=>{CL[k]=fr.result;sv("ra_clips",CL);const e=$("st_"+k);if(e)e.textContent="Saved ✓"};fr.readAsDataURL(new Blob(ch,{type:rec.mimeType||"audio/webm"}))};rec.start();$("st_"+k).textContent="🔴 Recording…"}catch(e){const s=$("st_"+k);if(s)s.textContent="Microphone not allowed"}}
+function recStop(){if(rec&&rec.state!=="inactive")rec.stop()}function delClip(k){delete CL[k];sv("ra_clips",CL);$("st_"+k).textContent="No recording"}
+/* ===== answers: feelings friends react ===== */
+let streak=0,wrongRun=0;const CH=["Yay! Correct!","Woohoo! You got it!","Super reading!","Brilliant!"];
+function chooseAnswer(i){if(answered)return;answered=true;const q=bank[activeStory.id][tier][index],bt=[...document.querySelectorAll(".answer")];teamAttempts[selectedTeam]++;const ok=i===q.a,fb=$("feedback");
+ if(ok){bt[i].classList.add("correct");teamScores[selectedTeam]+=10;teamCorrect[selectedTeam]++;tierScores[tier]++;streak++;wrongRun=0;const c=pk(CH);fb.textContent="🌟 "+c+" "+q.why;$("guideText").textContent="Excellent reading! Explain which clue helped you.";
+  react(streak>=3?["joy","proud"]:["joy"],streak>=3?`Amazing! ${streak} in a row! 🔥`:c,["⭐","🎉","✨","💛","🎈"]);playClip("ok").then(o=>speak(o?q.why:c+" "+q.why,"joy"))}
+ else{bt[i].classList.add("wrong");bt[q.a].classList.add("correct");streak=0;wrongRun++;fb.textContent="Good try! "+q.why+" Read the explanation, then use it to learn.";$("guideText").textContent="Mistakes help readers learn. Look at the correct answer and think about the clue.";
+  wrongRun>=2?react(["calm"],"Take a deep breath… you can do it! 💙",["🍃","💙","☁️"]):react(["sad","anxious"],"Oh no… that's okay! Let's learn from it.",["💧","💦","💧"]);playClip("no").then(o=>speak(o?q.why:"Oh no. That's okay. "+q.why,wrongRun>=2?"calm":"sad"))}
+ fb.classList.remove("hidden");$("nextBtn").disabled=false;$("scoreStat").textContent="⭐ "+teamScores[selectedTeam]+" points";renderScoreboard()}
+/* ===== profile (saved on this device) ===== */
+let PFS=ls("ra_pfs",[]),CUR=ls("ra_cur",null),AV="joy";
+function acctTab(t){["tab0","tab1"].forEach((id,i)=>$(id).classList.toggle("on",i===t));const b=$("acctBody");
+ if(t===2||CUR&&t===0&&false){}
+ if(CUR&&t!==1){b.innerHTML=`<div class="bd ${CUR.av}" style="width:110px;height:110px">${buddy(CUR.av)}</div><h3>Hi, ${CUR.name}!</h3><p>⭐ ${teamScores[selectedTeam]} points this session</p><button class="obtn" onclick="CUR=null;sv('ra_cur',null);acctTab(1)">Switch profile</button>`;return}
+ if(t===1){b.innerHTML=`<h3>Welcome back!</h3>${PFS.length?PFS.map((p,i)=>`<button class="obtn" onclick="logIn(${i})">${p.name}</button>`).join(""):"<p>No profiles on this device yet.</p>"}<button class="obtn fill" onclick="acctTab(0)">Create new profile</button>`;return}
+ b.innerHTML=`<h3>Create a READAPT Profile</h3><input id="pfName" maxlength="14" placeholder="Your nickname"><div class="avs">${Object.keys(BM).map(k=>`<div class="bd ${k===AV?"sel":""}" onclick="AV='${k}';acctTab(0)">${buddy(k)}</div>`).join("")}</div><button class="obtn fill" onclick="regPf()">Start reading</button><button class="obtn" disabled title="Needs an online sign-in service">With Apple</button><button class="obtn" disabled title="Needs an online sign-in service">With Google</button><button class="obtn" disabled title="Needs an online sign-in service">With Microsoft</button>`}
+function regPf(){const n=$("pfName").value.trim();if(!n){$("pfName").focus();return}CUR={name:n,av:AV};PFS.push(CUR);sv("ra_pfs",PFS);sv("ra_cur",CUR);react([AV],`Welcome, ${n}!`,["🎉","⭐"]);speak("Welcome, "+n+"! Let's read together!","joy");acctTab(0)}
+function logIn(i){CUR=PFS[i];sv("ra_cur",CUR);react([CUR.av],`Hi again, ${CUR.name}!`,["💛","✨"]);acctTab(0)}
+
+/* ===== MONSTER TEAMS: hosts, guides, welcome talkers ===== */
+const MON=[
+{k:"mimi",name:"Mimi",team:"Mimi's Fuzzies",emoji:"🩷",motto:"Giggly readers",body:"#f08aa3",dk:"#c4607b",fz:1,eye:"one",iris:"#5b6fd6",arm:"a-wave",leg:"boot",lash:1,fang:1,pm:1.3,mr:1,cr:1.15,w:"Hi hi! I'm Mimi! Let's read and giggle together!",go:"Ready to read? Let's go!",tap:["Hee hee!","Wheee!","That tickles!"]},
+{k:"bloop",name:"Bloop",team:"Bloop Blues",emoji:"💙",motto:"Cool thinkers",body:"#8fbcec",dk:"#5d8cc4",fz:1,eye:"one",iris:"#2a2a40",arm:"a-up",leg:"boot",pm:.8,mr:.9,cr:.88,w:"Boop! I'm Bloop. Let's dive into a story, friends!",go:"Let's dive into this story!",tap:["Boop!","Bloop bloop!","Splash!"]},
+{k:"stalky",name:"Stalky",team:"Stalky Scouts",emoji:"💚",motto:"Clue spotters",body:"#b5b53c",dk:"#8a8a28",eye:"stalk",arm:"",leg:"stub",spots:1,pm:1.45,mr:1.1,cr:1.3,w:"I'm Stalky! My eyes spot every clue. Come explore with me!",go:"My eyes are ready for clues!",tap:["Eyes up!","I see you!","Boing!"]},
+{k:"zig",name:"Zig",team:"Zig Zags",emoji:"💜",motto:"Brave brainiacs",body:"#51708e",dk:"#334c66",eye:"three",horn:"#ee6b86",arm:"",leg:"stripe",fang:1,spots:1,pm:1,mr:.95,cr:1,w:"Zig zag! I'm Zig. Three eyes, one mission: super reading!",go:"Three eyes, one mission. Go!",tap:["Zig zag!","Zoom!","Ta-da!"]}];
+teams.length=0;teams.push(...MON.map(m=>({name:m.team,emoji:m.emoji,motto:m.motto})));
+const K="#1c1430",fzp=(cx,cy,rx,ry,n)=>{let d="";for(let i=0;i<n*2;i++){const t=i/(n*2)*Math.PI*2,r=i%2?1:1.09;d+=(i?"L":"M")+(cx+Math.cos(t)*rx*r).toFixed(1)+" "+(cy+Math.sin(t)*ry*r).toFixed(1)}return d+"Z"},
+lb=(d,w,c)=>`<path d="${d}" fill="none" stroke="${K}" stroke-width="${w+5}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`,
+eyeG=(x,y,r,m)=>`<g class="eye"><circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="${K}" stroke-width="3"/><g class="pup"><circle cx="${x}" cy="${y+1}" r="${r*.55}" fill="${m.iris||"#2a2a40"}"/><circle cx="${x}" cy="${y+1}" r="${r*.3}" fill="#111"/><circle cx="${x+r*.2}" cy="${y-r*.15}" r="${r*.14}" fill="#fff"/></g></g>`;
+function mon(i,cls){const m=MON[i],b=m.body,dk=m.dk;let s=`<div class="mon ${m.arm} ${cls||""}" data-m="${i}" onclick="monTap(${i})"><svg viewBox="0 0 140 160"><ellipse cx="70" cy="152" rx="40" ry="6" fill="#0003"/><g class="bodyg">`;
+ if(m.horn)s+=`<path d="M44 54L36 22L62 44Z" fill="${m.horn}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><path d="M96 54L104 22L78 44Z" fill="${m.horn}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>`;
+ if(m.leg==="boot")s+=`<rect x="40" y="124" width="24" height="24" rx="9" fill="#222" stroke="${K}" stroke-width="2"/><rect x="76" y="124" width="24" height="24" rx="9" fill="#222" stroke="${K}" stroke-width="2"/>`;
+ else if(m.leg==="stub")s+=`<ellipse cx="52" cy="138" rx="15" ry="12" fill="${dk}" stroke="${K}" stroke-width="3"/><ellipse cx="88" cy="138" rx="15" ry="12" fill="${dk}" stroke="${K}" stroke-width="3"/>`;
+ else s+=[[52,-1],[88,1]].map(([x,d])=>{const p=`M${x} 128q${d*8} 12 ${d*14} 20`;return lb(p,6,"#f4a0b5")+`<path d="${p}" fill="none" stroke="#bcd8f2" stroke-width="6" stroke-dasharray="5 7"/><circle cx="${x+d*14}" cy="148" r="5" fill="#111"/>`}).join("");
+ if(m.eye==="stalk")s+=[[58,44,-1],[82,96,1]].map(([x,tx,d])=>`<g class="stalk" style="transform-origin:${x}px 56px">${lb(`M${x} 56Q${x+d*6} 30 ${tx} 22`,6,dk)}${eyeG(tx,18,13,m)}</g>`).join("");
+ s+=m.fz?`<path d="${fzp(70,90,42,46,17)}" fill="${b}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>`:`<ellipse cx="70" cy="90" rx="44" ry="46" fill="${b}" stroke="${K}" stroke-width="3"/>`;
+ s+=`<ellipse cx="70" cy="108" rx="27" ry="24" fill="#fff" opacity=".2"/>`;if(m.spots)s+=`<circle cx="48" cy="112" r="4" fill="${dk}"/><circle cx="94" cy="100" r="5" fill="${dk}"/><circle cx="56" cy="124" r="3.5" fill="${dk}"/>`;
+ const sm=m.arm===""&&m.eye!=="stalk"||m.eye==="stalk";s+=`<g class="armL">${lb(sm?"M30 98q-10 2-13 12":"M30 98q-16 4-18 24",9,dk)}</g><g class="armR">${lb(sm?"M110 98q10 2 13 12":"M110 98q16 4 18 24",9,dk)}</g>`;
+ if(m.eye==="one")s+=eyeG(70,68,19,m)+(m.lash?`<path d="M54 54l-5-6M62 50l-2-8M78 50l2-8M86 54l5-6" stroke="${K}" stroke-width="2.6" stroke-linecap="round"/>`:"");
+ if(m.eye==="three")s+=eyeG(48,76,10,m)+eyeG(70,62,11,m)+eyeG(92,76,10,m);
+ s+=`<circle cx="42" cy="98" r="6" fill="#ff7fa8" opacity=".5"/><circle cx="98" cy="98" r="6" fill="#ff7fa8" opacity=".5"/><path class="br brL" d="M46 52q9-6 16 0"/><path class="br brR" d="M78 52q9-6 16 0"/><ellipse class="tr" cx="40" cy="84" rx="3" ry="5" fill="#aee4ff"/>`;
+ s+=`<path class="mc" d="M54 104q16 14 32 0" fill="none" stroke="${K}" stroke-width="3.5" stroke-linecap="round"/>${m.fang?`<path d="M60 108l4 9 4-9z" fill="#fff" stroke="${K}" stroke-width="1.6" stroke-linejoin="round"/>`:""}<path class="mf" d="M56 114q14-12 28 0" fill="none" stroke="${K}" stroke-width="3.5" stroke-linecap="round"/><g class="mo"><ellipse cx="70" cy="108" rx="13" ry="11" fill="#7a1f3d" stroke="${K}" stroke-width="3"/><ellipse cx="70" cy="113" rx="7" ry="4" fill="#ff8aa5"/></g>`;
+ return s+`</g></svg></div>`}
+const talk=(i,on)=>document.querySelectorAll(`.mon[data-m="${i}"]`).forEach(e=>e.classList.toggle("talk",!!on)),stopTalk=()=>document.querySelectorAll(".mon.talk").forEach(e=>e.classList.remove("talk"));
+function monMood(i,c,ms){const e=[...document.querySelectorAll(`.mon[data-m="${i}"]`)];e.forEach(x=>x.classList.add(c));setTimeout(()=>e.forEach(x=>x.classList.remove(c)),ms||3000)}
+function setGuide(m){monMood(selectedTeam,{joy:"cheer",proud:"cheer",sad:"sad",anxious:"sad",calm:"calm"}[m]||"hop",3200)}
+function monTap(i){monMood(i,"hop",650);speak(pk(MON[i].tap),"joy",i)}
+/* monster voice: your recording (pitch-shifted per monster) or its own text-to-speech voice */
+let SID=0,USE=ls("ra_mine",true);
+SLOTS.length=0;SLOTS.push(["welcome","👋 Welcome greeting"],["guide","📣 Instructions"],["ok","🌟 Cheer"],["no","💛 Try again"]);
+function speak(text,mood,mi){if(mi==null)mi=selectedTeam;const m=MON[mi],id=++SID;stopTalk();talk(mi,1);return new Promise(res=>{if(!("speechSynthesis"in window)){setTimeout(()=>{talk(mi,0);res()},1500);return}speechSynthesis.cancel();duck(1);const vs=EN(),v=vs.find(x=>x.name===VS.v)||vs[0],parts=String(text).match(/[^.!?]+[.!?]*/g)||[text];let n=0;const fin=()=>{if(id===SID){duck(0);talk(mi,0)}res()};
+ parts.forEach((t,k)=>{const s=t.trim();if(!s)return;const u=new SpeechSynthesisUtterance(s);if(v){u.voice=v;u.lang=v.lang}let p=VS.p*m.pm,r=VS.r*m.mr;if(/!/.test(s)){p+=.14;r+=.06}if(/\?/.test(s))p+=.1;if(mood==="sad"||mood==="anxious"||/good try|oops|oh no/i.test(s)){p-=.12;r-=.12}if(mood==="calm")r-=.12;u.pitch=Math.max(.3,Math.min(2,p));u.rate=Math.max(.5,Math.min(1.4,r));if(k===parts.length-1){u.onend=fin;u.onerror=fin}speechSynthesis.speak(u);n++});if(!n)fin();setTimeout(fin,String(text).length*150+4000)})}
+function playClip(k,mi){if(mi==null)mi=selectedTeam;return new Promise(res=>{if(!CL[k]||!USE){res(false);return}try{const id=++SID;curAud&&curAud.pause();stopTalk();"speechSynthesis"in window&&speechSynthesis.cancel();duck(1);talk(mi,1);const a=curAud=new Audio(CL[k]);a.preservesPitch=a.mozPreservesPitch=a.webkitPreservesPitch=false;a.playbackRate=MON[mi].cr;const f=()=>{if(id===SID){duck(0);talk(mi,0)}res(true)};a.onended=a.onerror=f;a.play().catch(()=>{if(id===SID){duck(0);talk(mi,0)}res(false)})}catch(e){res(false)}})}
+function welcomeSay(i){if(i==null)i=selectedTeam;$("wbub").textContent=MON[i].w;monMood(i,"hop",650);playClip("welcome",i).then(ok=>{if(!ok)speak(MON[i].w,"joy",i)})}
+function renderWelcome(i){$("wmon").innerHTML=mon(i,"big");$("wbub").textContent=MON[i].w}
+function renderGuide(){const h=document.querySelector(".assistant-head");if(h)h.innerHTML=`<span class="assistant-avatar">${mon(selectedTeam)}</span><span>${MON[selectedTeam].name} · your READAPT guide</span>`}
+function renderTeams(){$("teamGrid").innerHTML=MON.map((m,i)=>`<button class="team ${i===selectedTeam?"selected":""}" onclick="selectTeam(${i})"><span class="mascot">${mon(i)}</span><strong>${m.team}</strong><small>${m.motto}</small></button>`).join("");$("selectedTeamNote").textContent="Selected team: "+MON[selectedTeam].emoji+" "+MON[selectedTeam].team}
+function selectTeam(i){selectedTeam=i;renderTeams();renderWelcome(i);welcomeSay(i)}
+function renderScoreboard(){$("scoreboard").innerHTML=MON.map((m,i)=>`<div class="score-row"><span>${mon(i,"mini")} ${m.team}</span><b>${teamScores[i]} ⭐</b></div>`).join("")}
+const _ss2=startStory;startStory=function(id){_ss2(id);renderGuide();const m=MON[selectedTeam];$("guideText").textContent=m.go+" "+$("guideText").textContent;monMood(selectedTeam,"hop",650);speak(m.go,"joy")};
+function openVoice(){document.querySelectorAll(".pb").forEach(b=>b.classList.toggle("on",b.dataset.v==="voice"));openModal(`<h2>🎙 Voice &amp; Monster Studio</h2><p>Record <b>your own voice</b> and the monsters will talk with it! Each monster changes the pitch of your recording, so Mimi, Bloop, Stalky and Zig all sound different.</p><label style="display:block;margin:8px 0"><input type="checkbox" ${USE?"checked":""} onchange="USE=this.checked;sv('ra_mine',USE)"> Monsters use my recorded voice</label>${SLOTS.map(([k,t])=>`<div class="clip"><b>${t}</b><button onclick="recStart('${k}')">● Record</button><button onclick="recStop()">■ Stop</button><button onclick="playClip('${k}')">▶ Play</button><button onclick="delClip('${k}')">🗑</button><span id="st_${k}" style="font-size:12px;color:#65748b">${CL[k]?"Saved ✓":"No recording"}</span></div>`).join("")}<p><b>Hear each monster</b></p><div class="tools">${MON.map((m,i)=>`<button onclick="welcomeSay(${i})">▶ ${m.name}</button>`).join("")}</div><hr><label>Reading voice (used when no recording)</label><select id="voiceSelect" onchange="VS.v=this.value;sv('ra_vs',VS)"></select><label>Speed</label><input type="range" min=".7" max="1.2" step=".02" value="${VS.r}" style="width:100%" oninput="VS.r=+this.value;sv('ra_vs',VS)"><label>Pitch</label><input type="range" min=".8" max="1.5" step=".02" value="${VS.p}" style="width:100%" oninput="VS.p=+this.value;sv('ra_vs',VS)"><label>🎵 Music volume</label><input type="range" min="0" max="1" step=".05" value="${mVol}" style="width:100%" oninput="mVol=+this.value;sv('ra_mvol',mVol);duck(0)"> <button class="cloud-btn" onclick="toggleMusic()">Music on/off</button> <button class="cloud-btn primary" onclick="closeModal()">Done</button>`);setTimeout(populateVoices,150)}
+/* hero welcome talker, confetti, about card */
+document.querySelector("#welcomeHero p").textContent="Choose your monster team! Your monster hosts the story, reads with you, and cheers you on. Tap a monster to hear it talk.";
+$("welcomeHero").insertAdjacentHTML("beforeend",`<div class="wm"><div class="rbub" id="wbub"></div><div id="wmon"></div></div>`);
+document.querySelector(".hero-actions").insertAdjacentHTML("beforeend",`<button class="cloud-btn mint" onclick="welcomeSay()">🔊 Hear my welcome</button>`);
+document.querySelector(".about-grid").insertAdjacentHTML("beforeend",`<div><h3>👾 Monster teams</h3><p>Choose a team and its monster becomes your host and guide. Tap them to hear them talk.</p><div>${MON.map((m,i)=>mon(i,"mini2")).join("")}</div></div>`);
+(function(){const c=["#ff6fae","#ffd23f","#47e0a8","#4da3ff","#b07cff","#ff8a3d"];let h="";for(let i=0;i<22;i++){const s=10+Math.random()*22,r=Math.random();h+=`<span class="cf" style="left:${Math.random()*100}%;width:${s}px;height:${s}px;background:${c[i%6]};border-radius:${r<.4?"50%":r<.7?"6px":"50% 0"};animation-duration:${14+Math.random()*16}s;animation-delay:${-Math.random()*20}s"></span>`}$("doodles").insertAdjacentHTML("beforeend",h)})();
+
+renderTeams();renderWelcome(selectedTeam);renderGuide();
+</script>
+</body>
+</html>
